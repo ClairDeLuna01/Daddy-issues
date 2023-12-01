@@ -13,19 +13,28 @@ public class Gun : MonoBehaviour
 
 	public Camera fpsCam;
 
-    // Update is called once per frame
-    void Update()
-    {
-		if(Input.GetButton("Fire1") && Time.time >= nextTimeToFire) {
-			nextTimeToFire = Time.time + 1f/firerate;
+	private GameManager gameManager;
+
+	void Start()
+	{
+		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+	}
+
+	// Update is called once per frame
+	void Update()
+	{
+		if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+		{
+			nextTimeToFire = Time.time + 1f / firerate;
 			Shoot();
 		}
-        
-    }
 
-	void Shoot() 
+	}
+
+	void Shoot()
 	{
-		for(int i = 0; i < pellets; i++) {
+		for (int i = 0; i < pellets; i++)
+		{
 
 			RaycastHit hit;
 			Vector3 shootDirection = fpsCam.transform.forward + new Vector3
@@ -35,19 +44,20 @@ public class Gun : MonoBehaviour
 				Random.Range(-spread, spread)
 			);
 
-			if(Physics.Raycast(fpsCam.transform.position, shootDirection, out hit, range)) 
+			if (Physics.Raycast(fpsCam.transform.position, shootDirection, out hit, range))
 			{
 				Debug.Log("Pellet " + i + " : " + hit.transform.name);
 
 				Enemy enemy = hit.transform.GetComponent<Enemy>();
-				if(enemy != null) {
+				if (enemy != null)
+				{
 					enemy.Hit(damage);
 				}
 
 			}
 
 		}
-		
 
+		gameManager.Fire();
 	}
 }

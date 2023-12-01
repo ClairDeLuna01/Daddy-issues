@@ -7,11 +7,13 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     [System.NonSerialized]
     public PlayerController playerController;
+    private Animator gunAnimator;
 
     // Start is called before the first frame update
     void Start()
     {
         playerController = player.GetComponent<PlayerController>();
+        gunAnimator = playerController.gun.GetComponent<Animator>();
     }
 
     void Update()
@@ -26,31 +28,13 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1.0f;
             Time.fixedDeltaTime = 0.02F * Time.timeScale;
         }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            StartCoroutine(FlipGun());
-        }
     }
 
-    IEnumerator FlipGun()
+    public void Fire()
     {
-        GameObject gun = playerController.gun;
-        float t = 0.0f;
-        float duration = 0.1f;
-        Quaternion startRot = gun.transform.localRotation;
-        Quaternion endRot = Quaternion.Euler(0.0f, 0.0f, 90.0f);
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            gun.transform.localRotation = Quaternion.Lerp(startRot, endRot, t / duration);
-            yield return null;
-        }
-        t = 0.0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            gun.transform.localRotation = Quaternion.Lerp(endRot, startRot, t / duration);
-            yield return null;
-        }
+        // gunAnimator.PlayInFixedTime("Idle", 1, 0.0f);
+        if (gunAnimator.GetCurrentAnimatorStateInfo(0).IsName("Flip"))
+            gunAnimator.SetTrigger("Skip this sh*t");
+        gunAnimator.SetTrigger("Flip :)");
     }
 }
