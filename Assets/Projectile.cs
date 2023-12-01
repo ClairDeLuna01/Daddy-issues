@@ -61,12 +61,12 @@ public class Projectile : MonoBehaviour
 
             rb.velocity = dir.normalized * 20.0f;
 
-            // rotate on the Y axis only to face the parent
-            Vector3 rot = transform.rotation.eulerAngles;
-            float newRot = Quaternion.LookRotation(parent.transform.position - transform.position).eulerAngles.y;
-            // interpolate the rotation so it's not instant
-            rot.y = Mathf.LerpAngle(rot.y, newRot, 10f * Time.deltaTime);
-            transform.rotation = Quaternion.Euler(rot);
+            // // rotate on the Y axis only to face the parent
+            // Vector3 rot = transform.rotation.eulerAngles;
+            // float newRot = Quaternion.LookRotation(parent.transform.position - transform.position).eulerAngles.y;
+            // // interpolate the rotation so it's not instant
+            // rot.y = Mathf.LerpAngle(rot.y, newRot, 10f * Time.deltaTime);
+            // transform.rotation = Quaternion.Euler(rot);
 
             // destroy after 5 seconds
             Destroy(gameObject, 5.0f);
