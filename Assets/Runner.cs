@@ -84,9 +84,17 @@ public class Runner : Enemy
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        /*
+		if (other.gameObject.CompareTag("Player"))
         {
             Debug.Log("Player hit");
         }
+		*/
+		Player player = other.transform.GetComponent<Player>();
+
+		if(player != null) 
+		{
+			player.Hit();
+		}
     }
 }

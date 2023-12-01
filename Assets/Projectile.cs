@@ -14,7 +14,12 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Player hit");
-        Destroy(gameObject);
+		Destroy(gameObject);
+        Player player = other.transform.GetComponent<Player>();
+		if(player != null) 
+		{
+			player.Hit();
+		}
+
     }
 }
