@@ -22,20 +22,26 @@ public class Runner : Enemy
     // Update is called once per frame
     void Update()
     {
-        if (aggro && !attackingCooldown)
+        if (aggro)
         {
-            float distance = Vector3.Distance(gameManager.player.transform.position, transform.position);
-            if (distance > range)
+            if (!attackingCooldown)
             {
-                Run();
+                float distance = Vector3.Distance(gameManager.player.transform.position, transform.position);
+                if (distance > range)
+                {
+                    Run();
+                }
+                else
+                {
+                    Attack();
+                }
             }
-            else
-            {
-                Attack();
-            }
-
-            transform.LookAt(gameManager.player.transform);
+            // rotate on the Y axis only to face the player
+            Vector3 rot = transform.rotation.eulerAngles;
+            rot.y = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y;
+            transform.rotation = Quaternion.Euler(rot);
         }
+
     }
 
     void Run()
