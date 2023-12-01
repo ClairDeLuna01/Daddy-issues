@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
 {
     public int hp = 100;
     public bool aggro = false;
+    protected bool frozen = false;
 
     protected GameManager gameManager;
     protected Rigidbody rb;
@@ -39,4 +40,32 @@ public class Enemy : MonoBehaviour
     {
         aggro = false;
     }
+
+    public virtual void Freeze()
+    {
+        frozen = true;
+    }
+    public virtual void Unfreeze()
+    {
+        frozen = false;
+    }
+
+    public void toggleFreeze()
+    {
+        if (frozen)
+        {
+            Unfreeze();
+        }
+        else
+        {
+            Freeze();
+        }
+    }
+
+    public void kill()
+    {
+        hp = 0;
+        Die();
+    }
+
 }
