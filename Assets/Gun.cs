@@ -6,15 +6,18 @@ public class Gun : MonoBehaviour
 	public int damage = 1;
 	public float range = 20f;
 	public float spread = 0.5f;
-	public float firerate = 1f;
+	public float firerate = 0.5f;
 	public int pellets = 12;
+
+	private float nextTimeToFire = 0f;
 
 	public Camera fpsCam;
 
     // Update is called once per frame
     void Update()
     {
-		if(Input.GetButton("Fire1")) {
+		if(Input.GetButton("Fire1") && Time.time >= nextTimeToFire) {
+			nextTimeToFire = Time.time + 1f/firerate;
 			Shoot();
 		}
         
