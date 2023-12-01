@@ -24,7 +24,7 @@ public class Runner : Enemy
     {
         if (aggro)
         {
-            if (!attackingCooldown)
+            if (!attackingCooldown && !attacking)
             {
                 float distance = Vector3.Distance(gameManager.player.transform.position, transform.position);
                 if (distance > range)
@@ -35,11 +35,13 @@ public class Runner : Enemy
                 {
                     Attack();
                 }
+                // rotate on the Y axis only to face the player
+                Vector3 rot = transform.rotation.eulerAngles;
+                float newRot = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y;
+                // interpolate the rotation so it's not instant
+                rot.y = Mathf.LerpAngle(rot.y, newRot, 10f * Time.deltaTime);
+                transform.rotation = Quaternion.Euler(rot);
             }
-            // rotate on the Y axis only to face the player
-            Vector3 rot = transform.rotation.eulerAngles;
-            rot.y = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y;
-            transform.rotation = Quaternion.Euler(rot);
         }
 
     }
@@ -60,6 +62,9 @@ public class Runner : Enemy
 
     IEnumerator AttackRoutine()
     {
+        Vector3 rot = transform.rotation.eulerAngles;
+        rot.y = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y;
+        transform.rotation = Quaternion.Euler(rot);
         attacking = true;
         yield return new WaitForSeconds(0.2f);
 

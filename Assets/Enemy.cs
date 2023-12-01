@@ -7,7 +7,7 @@ public class Enemy : MonoBehaviour
     public int hp = 100;
     public bool aggro = false;
 
-    public GameManager gameManager;
+    protected GameManager gameManager;
     protected Rigidbody rb;
 
     protected void Start()

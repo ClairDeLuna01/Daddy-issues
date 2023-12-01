@@ -11,5 +11,17 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Time.timeScale = 0.3f;
+            Time.fixedDeltaTime = 0.02F * Time.timeScale;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            Time.timeScale = 1.0f;
+            Time.fixedDeltaTime = 0.02F * Time.timeScale;
+        }
+    }
 }
