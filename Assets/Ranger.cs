@@ -13,6 +13,8 @@ public class Ranger : Enemy
     private bool attackingCooldown = false;
     private bool facePlayer = false;
 
+    IEnumerator attackRoutine = null;
+
     new void Start()
     {
         base.Start();
@@ -27,7 +29,7 @@ public class Ranger : Enemy
     // Update is called once per frame
     void Update()
     {
-        if (aggro)
+        if (aggro && !frozen)
         {
             if (!attackingCooldown && !attacking)
             {
@@ -70,7 +72,8 @@ public class Ranger : Enemy
     {
         if (!attacking)
         {
-            StartCoroutine(AttackRoutine());
+            attackRoutine = AttackRoutine();
+            StartCoroutine(attackRoutine);
         }
     }
 
@@ -79,9 +82,10 @@ public class Ranger : Enemy
         attacking = true;
         yield return new WaitForSeconds(0.5f);
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
-        Vector3 bulletRot = new Vector3(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
+        Vector3 bulletRot = new(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
         Quaternion bulletRotQ = Quaternion.Euler(bulletRot);
         GameObject projectile = Instantiate(projectilePrefab, transform.position + direction, bulletRotQ);
+        projectile.GetComponent<Projectile>().parent = gameObject;
         projectile.GetComponent<Rigidbody>().velocity = direction * 20.0f;
         attackingCooldown = true;
         // walk in a random direction
@@ -94,5 +98,31 @@ public class Ranger : Enemy
         yield return new WaitForSeconds(attackCooldown / 2 + Random.Range(0.0f, 0.5f));
         attacking = false;
         facePlayer = false;
+
+        attackRoutine = null;
+    }
+
+    public override void Freeze()
+    {
+        base.Freeze();
+
+        if (attackRoutine != null)
+        {
+            StopCoroutine(attackRoutine);
+            attackRoutine = null;
+        }
+
+        rb.velocity = Vector3.zero;
+    }
+
+    public override void Unfreeze()
+    {
+        base.Unfreeze();
+
+        if (attackRoutine == null)
+        {
+            attackRoutine = AttackRoutine();
+            StartCoroutine(attackRoutine);
+        }
     }
 }
