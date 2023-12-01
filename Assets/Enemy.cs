@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
 
     public GameManager gameManager;
 
-    void Start()
+    protected void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }

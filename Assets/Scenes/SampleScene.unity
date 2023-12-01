@@ -163,11 +163,11 @@ MonoBehaviour:
   forwardSpeed: 20
   sideSpeed: 35
   backSpeed: 20
-  maxSpeed: 16
+  maxSpeed: 14
   stopSpeed: 20
-  acceleration: 4
+  acceleration: 8
   airAcceleration: 3
-  friction: 1.6
+  friction: 3
   jumpForce: 23
   sensitivity: 0.5
 --- !u!136 &248777483
@@ -485,6 +485,7 @@ GameObject:
   - component: {fileID: 1002719760}
   - component: {fileID: 1002719759}
   - component: {fileID: 1002719763}
+  - component: {fileID: 1002719764}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -601,6 +602,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1.9000523, z: 1.459198}
   m_Center: {x: 0, y: 0.049973845, z: 0.229599}
+--- !u!114 &1002719764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002719758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c0b8996175eb441921409dc37d8966, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hp: 100
+  aggro: 0
+  gameManager: {fileID: 0}
 --- !u!1 &1400835522
 GameObject:
   m_ObjectHideFlags: 0
