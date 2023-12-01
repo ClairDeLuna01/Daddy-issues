@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 60.0f;
     public float sensitivity = 0.005f;
 
-
+    public GameObject gun;
 
     // Start is called before the first frame update
     void Start()
