@@ -82,7 +82,7 @@ public class Ranger : Enemy
         Vector3 bulletRot = new Vector3(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
         Quaternion bulletRotQ = Quaternion.Euler(bulletRot);
         GameObject projectile = Instantiate(projectilePrefab, transform.position + direction, bulletRotQ);
-        projectile.GetComponent<Rigidbody>().velocity = direction * 15.0f;
+        projectile.GetComponent<Rigidbody>().velocity = direction * 20.0f;
         attackingCooldown = true;
         // walk in a random direction
         Vector3 randomDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
@@ -91,7 +91,7 @@ public class Ranger : Enemy
         attackingCooldown = false;
         rb.velocity = Vector3.zero;
         facePlayer = true;
-        yield return new WaitForSeconds(attackCooldown / 2);
+        yield return new WaitForSeconds(attackCooldown / 2 + Random.Range(0.0f, 0.5f));
         attacking = false;
         facePlayer = false;
     }

@@ -3,61 +3,74 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-	public int damage = 1;
-	public float range = 20f;
-	public float spread = 0.5f;
-	public float firerate = 0.5f;
-	public int pellets = 12;
+    public int damage = 1;
+    public float range = 20f;
+    public float spread = 0.5f;
+    public float firerate = 0.5f;
+    public int pellets = 12;
 
-	private float nextTimeToFire = 0f;
+    public GameObject bulletHoleDecal;
 
-	public Camera fpsCam;
+    private float nextTimeToFire = 0f;
 
-	private GameManager gameManager;
+    public Camera fpsCam;
 
-	void Start()
-	{
-		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-	}
+    private GameManager gameManager;
 
-	// Update is called once per frame
-	void Update()
-	{
-		if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
-		{
-			nextTimeToFire = Time.time + 1f / firerate;
-			Shoot();
-		}
+    void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+    }
 
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+        {
+            nextTimeToFire = Time.time + 1f / firerate;
+            Shoot();
+        }
 
-	void Shoot()
-	{
-		for (int i = 0; i < pellets; i++)
-		{
+    }
 
-			RaycastHit hit;
-			Vector3 shootDirection = fpsCam.transform.forward + new Vector3
-			(
-				Random.Range(-spread, spread),
-				Random.Range(-spread, spread),
-				Random.Range(-spread, spread)
-			);
+    void Shoot()
+    {
+        for (int i = 0; i < pellets; i++)
+        {
 
-			if (Physics.Raycast(fpsCam.transform.position, shootDirection, out hit, range))
-			{
-				Debug.Log("Pellet " + i + " : " + hit.transform.name);
+            RaycastHit hit;
+            Vector3 shootDirection = fpsCam.transform.forward + new Vector3
+            (
+                Random.Range(-spread, spread),
+                Random.Range(-spread, spread),
+                Random.Range(-spread, spread)
+            );
 
-				Enemy enemy = hit.transform.GetComponent<Enemy>();
-				if (enemy != null)
-				{
-					enemy.Hit(damage);
-				}
+            if (Physics.Raycast(fpsCam.transform.position, shootDirection, out hit, range))
+            {
+                // Debug.Log("Pellet " + i + " : " + hit.transform.name);
+                // draw gizmo
+                Debug.DrawRay(fpsCam.transform.position, shootDirection * hit.distance, Color.yellow, 15.0f);
 
-			}
+                // check if tag is Enemy
+                if (hit.transform.CompareTag("Enemy"))
+                {
+                    // getComponent is expensive so we only want to call it when absolutely necessary
+                    Enemy enemy = hit.transform.GetComponent<Enemy>();
+                    enemy.Hit(damage);
+                }
+                else if (hit.transform.CompareTag("Floor"))
+                {
+                    // instantiate bullet hole decal
+                    GameObject decal = Instantiate(bulletHoleDecal, hit.point + hit.normal * 0.025f, Quaternion.LookRotation(hit.normal));
+                    // destroy decal after 5 seconds
+                    Destroy(decal, 60.0f);
+                }
 
-		}
+            }
 
-		gameManager.Fire();
-	}
+        }
+
+        gameManager.Fire();
+    }
 }

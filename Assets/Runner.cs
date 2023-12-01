@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Runner : Enemy
 {
-    public static float speed = 7.0f;
+    public static float speed = 10.0f;
     public static float range = 3.0f;
 
     private BoxCollider hitBox;
