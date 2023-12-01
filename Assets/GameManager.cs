@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     [System.NonSerialized]
     public PlayerController playerController;
     private Animator gunAnimator;
+    public ParticleSystem muzzleFlash;
 
     // Start is called before the first frame update
     void Start()
@@ -33,8 +34,7 @@ public class GameManager : MonoBehaviour
     public void Fire()
     {
         // gunAnimator.PlayInFixedTime("Idle", 1, 0.0f);
-        if (gunAnimator.GetCurrentAnimatorStateInfo(0).IsName("Flip"))
-            gunAnimator.SetTrigger("Skip this sh*t");
         gunAnimator.SetTrigger("Flip :)");
+        muzzleFlash.Play();
     }
 }
