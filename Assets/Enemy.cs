@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void Hit(int damage)
+    public void Hit(int damage)
     {
         hp -= damage;
         if (hp <= 0)
