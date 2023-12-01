@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Runner : Enemy
 {
-    public static float speed = 10.0f;
-    public static float range = 1.0f;
+    public static float speed = 7.0f;
+    public static float range = 3.0f;
 
     private BoxCollider hitBox;
+    private bool attacking = false;
+    private bool attackingCooldown = false;
+
 
     protected new void Start()
     {
@@ -19,7 +22,7 @@ public class Runner : Enemy
     // Update is called once per frame
     void Update()
     {
-        if (aggro)
+        if (aggro && !attackingCooldown)
         {
             float distance = Vector3.Distance(gameManager.player.transform.position, transform.position);
             if (distance > range)
@@ -30,6 +33,8 @@ public class Runner : Enemy
             {
                 Attack();
             }
+
+            transform.LookAt(gameManager.player.transform);
         }
     }
 
@@ -41,6 +46,36 @@ public class Runner : Enemy
 
     void Attack()
     {
+        if (!attacking)
+        {
+            StartCoroutine(AttackRoutine());
+        }
+    }
 
+    IEnumerator AttackRoutine()
+    {
+        attacking = true;
+        yield return new WaitForSeconds(0.2f);
+
+        hitBox.enabled = true;
+        Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
+        rb.velocity = direction * 10.0f;
+        yield return new WaitForSeconds(0.4f);
+        hitBox.enabled = false;
+        rb.velocity = Vector3.zero;
+
+        attacking = false;
+        attackingCooldown = true;
+
+        yield return new WaitForSeconds(1.0f);
+        attackingCooldown = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Player hit");
+        }
     }
 }

@@ -8,10 +8,12 @@ public class Enemy : MonoBehaviour
     public bool aggro = false;
 
     public GameManager gameManager;
+    protected Rigidbody rb;
 
     protected void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void Hit(int damage)
