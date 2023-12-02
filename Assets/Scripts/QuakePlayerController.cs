@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     public float sensitivity = 0.005f;
 
     public GameObject gun;
+	public GameObject hand;
 
     // Start is called before the first frame update
     void Start()
