@@ -330,7 +330,6 @@ MonoBehaviour:
   footstepSoundsLocation: {fileID: 436371873}
   jumpSound: {fileID: 248777490}
   gun: {fileID: 1946540862}
-  hand: {fileID: 2105641530}
   hands: {fileID: 182732989}
 --- !u!136 &248777483
 CapsuleCollider:
@@ -416,6 +415,13 @@ MonoBehaviour:
   energy: 50
   Iframes: 20
   godMode: 1
+  infiniteEnergy: 0
+  slowing: 0
+  freezing: 0
+  slowDrainCost: 2
+  parryCost: 0
+  freezeCost: 20
+  freezeDrainCost: 1
 --- !u!114 &248777489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10118,11 +10124,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   amount: 25
---- !u!1 &2105641530 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7775102754920439078, guid: 90b26f6727841334d98c3e1db8fe442b, type: 3}
-  m_PrefabInstance: {fileID: 850736401}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2105641531 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6966336823350118300, guid: 90b26f6727841334d98c3e1db8fe442b, type: 3}
