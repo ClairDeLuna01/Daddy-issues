@@ -8,28 +8,29 @@ public class GameManager : MonoBehaviour
     [System.NonSerialized]
     public PlayerController playerController;
     private Animator gunAnimator;
-	private HandAnimationController handAnimationController;
+    private HandAnimationController handAnimationController;
     public ParticleSystem muzzleFlash;
+    public AudioSource fireAudio;
 
     // Start is called before the first frame update
     void Start()
     {
         playerController = player.GetComponent<PlayerController>();
         gunAnimator = playerController.gun.GetComponent<Animator>();
-		handAnimationController = GameObject.Find("Hand").GetComponent<HandAnimationController>();
+        handAnimationController = GameObject.Find("Hand").GetComponent<HandAnimationController>();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-			handAnimationController.PlaySlowmo();
+            handAnimationController.PlaySlowmo();
             Time.timeScale = 0.3f;
             Time.fixedDeltaTime = 0.02F * Time.timeScale;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-			handAnimationController.PlaySlowmo();
+            handAnimationController.PlaySlowmo();
             Time.timeScale = 1.0f;
             Time.fixedDeltaTime = 0.02F * Time.timeScale;
         }
@@ -40,5 +41,6 @@ public class GameManager : MonoBehaviour
         // gunAnimator.PlayInFixedTime("Idle", 1, 0.0f);
         gunAnimator.SetTrigger("Flip :)");
         muzzleFlash.Play();
+        fireAudio.Play();
     }
 }

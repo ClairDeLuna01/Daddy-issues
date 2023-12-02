@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     public float maxStepHeight = 0.4f;
 
     public GameObject gun;
-	public GameObject hand;
+    public GameObject hand;
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +57,19 @@ public class PlayerController : MonoBehaviour
 
         Camera.main.transform.Rotate(Vector3.left * mouseLook.y);
         transform.Rotate(Vector3.up * mouseLook.x);
+
+        // lock camera rotation
+        Vector3 euler = Camera.main.transform.eulerAngles;
+        // lock z rotation to 0
+        euler.z = 0.0f;
+
+        // clamp up/down rotation to 85 degrees
+        if (euler.x > 85.0f && euler.x < 180.0f)
+            euler.x = 85.0f;
+        else if (euler.x < 275.0f && euler.x > 180.0f)
+            euler.x = 275.0f;
+
+        Camera.main.transform.eulerAngles = euler;
     }
 
     private void Jump()
