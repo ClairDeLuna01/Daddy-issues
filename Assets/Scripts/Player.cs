@@ -7,16 +7,27 @@ public class Player : MonoBehaviour
 	public int energy = 50;
 	public float Iframes = 20f;
 	public bool godMode = true;
+	public bool infiniteEnergy = false;
+	public bool slowing = false;
+	public bool freezing = false;
+	public int slowDrainCost = 10;
+	public int parryCost = 0;
+	public int freezeCost = 30;
+	public int freezeDrainCost = 5;
+	private float nextDrain;
 	private float nextDamage;
 	private HandAnimationController handAnimationController;
 	private GameManager gameManager;
     private Rigidbody rb;
     private PlayerController playerController;
+	private RaycastHit target;
 
 	protected void Start() {
 		playerController = GetComponent<PlayerController>();
 		handAnimationController = GameObject.Find("Hand").GetComponent<HandAnimationController>();
+		gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 		nextDamage = Time.time;
+		nextDrain = Time.time;
 	}
 
 	public void RestoreArmor() {
@@ -39,8 +50,45 @@ public class Player : MonoBehaviour
 		}
 	}
 
+	public bool EnergyCheck(int cost) {
+		return energy - cost > 0;
+	}
+
+	public void RemoveEnergy(int amount) {
+		energy -= amount;
+	}
+
     void Update()
     {
+		if(Time.time >= nextDrain) {
+			nextDrain = Time.time + 1f;
+			if(slowing && !infiniteEnergy) 
+			{
+				if(EnergyCheck(slowDrainCost)) 
+				{
+					RemoveEnergy(slowDrainCost);
+				}
+				else 
+				{
+					slowing = false;
+					gameManager.DeactivateSlow();
+				}
+			}
+			if(freezing && !infiniteEnergy) 
+			{
+				if(EnergyCheck(freezeDrainCost))
+				{
+					RemoveEnergy(freezeDrainCost);
+				}
+				else
+				{
+					freezing = false;
+					target.transform.GetComponent<Enemy>().Unfreeze();
+				}
+			}
+
+		}
+
         if (Input.GetMouseButtonDown(1))
         {
             Vector3 camDir = Camera.main.transform.forward;
@@ -50,21 +98,23 @@ public class Player : MonoBehaviour
             // draw gizmo
             Debug.DrawRay(ray.origin, ray.direction * 100.0f, Color.red, 100.0f);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100.0f))
+            if (Physics.Raycast(ray, out target, 100.0f))
             {
-                if (hit.collider.gameObject.CompareTag("Enemy"))
+                if (target.collider.gameObject.CompareTag("Enemy") && EnergyCheck(freezeCost))
                 {
                     // freeze
+					freezing = true;
+					RemoveEnergy(freezeCost);
 					handAnimationController.PlayPause();
-                    hit.transform.GetComponent<Enemy>().toggleFreeze();
+                    target.transform.GetComponent<Enemy>().toggleFreeze();
                     Debug.Log("Freeze");
                 }
-                else if (hit.collider.gameObject.CompareTag("Projectile"))
+                else if (target.collider.gameObject.CompareTag("Projectile") && EnergyCheck(parryCost))
                 {
                     // deflect
+					RemoveEnergy(parryCost);
 					handAnimationController.PlayRewind();
-                    hit.transform.GetComponent<Projectile>().Deflect();
-
+                    target.transform.GetComponent<Projectile>().Deflect();
                     Debug.Log("Deflect");
                 }
             }
