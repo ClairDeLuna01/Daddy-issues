@@ -9,6 +9,7 @@ public class ArmorConsumable : Consumable
 		Player player = other.transform.GetComponent<Player>();
 
 		if(player != null && !player.armor) {
+			Debug.Log("Armor restored");
 			player.RestoreArmor();
 			Destroy(gameObject);
 		}

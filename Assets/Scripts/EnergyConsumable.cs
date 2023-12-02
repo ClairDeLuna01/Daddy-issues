@@ -11,6 +11,7 @@ public class EnergyConsumable : Consumable
 		Player player = other.transform.GetComponent<Player>();
 
 		if(player != null && player.energy < 100) {
+			Debug.Log("Energy restored");
 			player.RestoreEnergy(amount);
 			Destroy(gameObject);
 		}
