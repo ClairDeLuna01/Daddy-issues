@@ -63,6 +63,7 @@ public class Gun : MonoBehaviour
                 {
                     // instantiate bullet hole decal
                     GameObject decal = Instantiate(bulletHoleDecal, hit.point + hit.normal * 0.025f, Quaternion.LookRotation(hit.normal));
+                    decal.transform.rotation = Quaternion.Euler(decal.transform.rotation.eulerAngles.x, decal.transform.rotation.eulerAngles.y, Random.Range(0, 360));
                     // destroy decal after 5 seconds
                     Destroy(decal, 60.0f);
                 }

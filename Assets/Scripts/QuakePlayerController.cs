@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 60.0f;
     public float sensitivity = 0.005f;
 
+    public float maxStepHeight = 0.4f;
+
     public GameObject gun;
 
     // Start is called before the first frame update
@@ -77,7 +79,7 @@ public class PlayerController : MonoBehaviour
         origin = transform.position;
 
         Ray ray = new(origin, Vector3.down);
-        if (Physics.Raycast(ray, out _, 1.2f, groundMask))
+        if (Physics.Raycast(ray, out _, 1.8f, groundMask))
         {
             if (!lockGround)
                 grounded = true;
@@ -124,7 +126,7 @@ public class PlayerController : MonoBehaviour
         if (speed < 0.1f)
             bob = 0.0f;
 
-        Camera.main.transform.localPosition = new Vector3(0.0f, 1.0f + bob, 0.0f);
+        Camera.main.transform.localPosition = new Vector3(0.0f, .9f + bob, 0.0f);
 
 
         MouseMove();
@@ -155,7 +157,7 @@ public class PlayerController : MonoBehaviour
             Vector2 offsetXZ = velocity / speed * 0.5f;
             Vector3 offset = new(offsetXZ.x, 0.0f, offsetXZ.y);
             Ray ray = new(transform.position + offset, Vector3.down);
-            if (!Physics.Raycast(ray, out _, 1.2f, groundMask))
+            if (!Physics.Raycast(ray, out _, 1.8f, groundMask))
             {
                 frictionValue *= 2.0f;
             }
@@ -207,6 +209,8 @@ public class PlayerController : MonoBehaviour
         {
             PM_airAccelerate(wishDir, wishSpeed, airAcceleration);
         }
+
+        HandleSteps(wishSpeed);
     }
 
     void PM_Accelerate(Vector3 wishDirection, float wishSpeed, float accel)
@@ -258,5 +262,31 @@ public class PlayerController : MonoBehaviour
         vel += accelSpeed * wishDirection;
 
         rb.velocity = vel;
+    }
+
+    void HandleSteps(float wishSpeed)
+    {
+        Vector2 velocity = new(rb.velocity.x, rb.velocity.z);
+        float speed = velocity.magnitude;
+
+        if (!grounded || wishSpeed < 0.1f)
+            return;
+
+        Vector2 forward2D = velocity / speed;
+        Vector3 forward = new(forward2D.x, 0.0f, forward2D.y);
+
+        Vector3 offset = forward * 0.7f + Vector3.down * 0.99f;
+
+        Ray ray = new(origin + offset, Vector3.up);
+        Debug.DrawRay(origin + offset, Vector3.up, Color.red, 0.1f);
+        Debug.DrawRay(origin, Vector3.up, Color.yellow, 0.1f);
+        if (Physics.Raycast(ray, out RaycastHit hit, 0.5f, groundMask))
+        {
+            Debug.Log(hit.distance);
+            if (hit.distance < maxStepHeight)
+            {
+                rb.velocity += new Vector3(0.0f, hit.distance * 10f, 0.0f);
+            }
+        }
     }
 }
