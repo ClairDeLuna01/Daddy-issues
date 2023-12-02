@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator FadeInCoroutine;
     private IEnumerator FadeOutCoroutine;
+    private Player playerScript;
 
     private AudioSource[] footstepSounds;
 
@@ -33,37 +34,50 @@ public class GameManager : MonoBehaviour
         handAnimationController = GameObject.Find("Hand").GetComponent<HandAnimationController>();
 
         footstepSounds = playerController.footstepSounds;
+        playerScript = player.GetComponent<Player>();
+    }
+
+    public void ActivateSlow()
+    {
+        playerScript.slowing = true;
+        handAnimationController.PlaySlowmo();
+        Time.timeScale = 0.3f;
+        Time.fixedDeltaTime = 0.02F * Time.timeScale;
+        fireAudio.pitch = 0.5f;
+        trackCombat.pitch = 0.5f;
+        trackCalm.pitch = 0.5f;
+        for (int i = 0; i < footstepSounds.Length; i++)
+        {
+            footstepSounds[i].pitch = 0.5f;
+        }
+        playerController.jumpSound.pitch = 0.5f;
+    }
+
+    public void DeactivateSlow()
+    {
+        playerScript.slowing = false;
+        handAnimationController.PlaySlowmo();
+        Time.timeScale = 1.0f;
+        Time.fixedDeltaTime = 0.02F * Time.timeScale;
+        fireAudio.pitch = 1.0f;
+        trackCombat.pitch = 1.0f;
+        trackCalm.pitch = 1.0f;
+        for (int i = 0; i < footstepSounds.Length; i++)
+        {
+            footstepSounds[i].pitch = 1.0f;
+        }
+        playerController.jumpSound.pitch = 1.0f;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (playerScript.EnergyCheck(playerScript.slowDrainCost) && Input.GetKeyDown(KeyCode.LeftShift))
         {
-            handAnimationController.PlaySlowmo();
-            Time.timeScale = 0.3f;
-            Time.fixedDeltaTime = 0.02F * Time.timeScale;
-            fireAudio.pitch = 0.5f;
-            trackCombat.pitch = 0.5f;
-            trackCalm.pitch = 0.5f;
-            for (int i = 0; i < footstepSounds.Length; i++)
-            {
-                footstepSounds[i].pitch = 0.5f;
-            }
-            playerController.jumpSound.pitch = 0.5f;
+            ActivateSlow();
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (playerScript.slowing && Input.GetKeyUp(KeyCode.LeftShift))
         {
-            handAnimationController.PlaySlowmo();
-            Time.timeScale = 1.0f;
-            Time.fixedDeltaTime = 0.02F * Time.timeScale;
-            fireAudio.pitch = 1.0f;
-            trackCombat.pitch = 1.0f;
-            trackCalm.pitch = 1.0f;
-            for (int i = 0; i < footstepSounds.Length; i++)
-            {
-                footstepSounds[i].pitch = 1.0f;
-            }
-            playerController.jumpSound.pitch = 1.0f;
+            DeactivateSlow();
         }
         if (Input.GetKeyDown(KeyCode.X))
         {

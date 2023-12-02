@@ -6,20 +6,15 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Vector3 origin = Vector3.zero;
-
     private Rigidbody rb;
-
     public bool grounded = false;
     private bool lockGround = false;
     private float lockGroundStart = 0.0f;
     private float lockGroundDuration = 0.1f;
-
     public LayerMask groundMask;
-
     public float forwardSpeed = 20.0f;
     public float sideSpeed = 35.0f;
     public float backSpeed = 20.0f;
-
     public float maxSpeed = 32.0f;
     public float stopSpeed = 20.0f;
     public float acceleration = 2.0f;
@@ -27,7 +22,6 @@ public class PlayerController : MonoBehaviour
     public float friction = 1.2f;
     public float jumpForce = 60.0f;
     public float sensitivity = 0.005f;
-
     public float maxStepHeight = 0.4f;
 
     public AudioSource[] footstepSounds;
@@ -36,7 +30,6 @@ public class PlayerController : MonoBehaviour
     public AudioSource jumpSound;
 
     public GameObject gun;
-    public GameObject hand;
 
     public GameObject hands;
 
