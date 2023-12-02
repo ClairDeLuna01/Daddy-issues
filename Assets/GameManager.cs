@@ -23,12 +23,16 @@ public class GameManager : MonoBehaviour
     private IEnumerator FadeInCoroutine;
     private IEnumerator FadeOutCoroutine;
 
+    private AudioSource[] footstepSounds;
+
     // Start is called before the first frame update
     void Start()
     {
         playerController = player.GetComponent<PlayerController>();
         gunAnimator = playerController.gun.GetComponent<Animator>();
         handAnimationController = GameObject.Find("Hand").GetComponent<HandAnimationController>();
+
+        footstepSounds = playerController.footstepSounds;
     }
 
     void Update()
@@ -41,6 +45,11 @@ public class GameManager : MonoBehaviour
             fireAudio.pitch = 0.5f;
             trackCombat.pitch = 0.5f;
             trackCalm.pitch = 0.5f;
+            for (int i = 0; i < footstepSounds.Length; i++)
+            {
+                footstepSounds[i].pitch = 0.5f;
+            }
+            playerController.jumpSound.pitch = 0.5f;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
@@ -50,6 +59,11 @@ public class GameManager : MonoBehaviour
             fireAudio.pitch = 1.0f;
             trackCombat.pitch = 1.0f;
             trackCalm.pitch = 1.0f;
+            for (int i = 0; i < footstepSounds.Length; i++)
+            {
+                footstepSounds[i].pitch = 1.0f;
+            }
+            playerController.jumpSound.pitch = 1.0f;
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
