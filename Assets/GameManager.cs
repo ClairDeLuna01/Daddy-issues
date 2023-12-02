@@ -55,11 +55,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (playerScript.EnergyCheck(playerScript.slowDrainCost) && Input.GetKeyDown(KeyCode.LeftShift))
         {
             ActivateSlow();
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        else if (playerScript.slowing && Input.GetKeyUp(KeyCode.LeftShift))
         {
             DeactivateSlow();
         }

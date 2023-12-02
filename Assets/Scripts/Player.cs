@@ -10,10 +10,11 @@ public class Player : MonoBehaviour
 	public bool infiniteEnergy = false;
 	public bool slowing = false;
 	public bool freezing = false;
-	public int slowDrainCost = 10;
+	public int slowDrainCost = 2;
 	public int parryCost = 0;
-	public int freezeCost = 30;
-	public int freezeDrainCost = 5;
+	public int freezeCost = 20;
+	public int freezeDrainCost = 1;
+	private float drainFrames = 2f;
 	private float nextDrain;
 	private float nextDamage;
 	private HandAnimationController handAnimationController;
@@ -61,7 +62,7 @@ public class Player : MonoBehaviour
     void Update()
     {
 		if(Time.time >= nextDrain) {
-			nextDrain = Time.time + 1f;
+			nextDrain = Time.time + 1f/drainFrames;
 			if(slowing && !infiniteEnergy) 
 			{
 				if(EnergyCheck(slowDrainCost)) 
@@ -100,14 +101,24 @@ public class Player : MonoBehaviour
 
             if (Physics.Raycast(ray, out target, 100.0f))
             {
-                if (target.collider.gameObject.CompareTag("Enemy") && EnergyCheck(freezeCost))
+                if (target.collider.gameObject.CompareTag("Enemy"))
                 {
                     // freeze
-					freezing = true;
-					RemoveEnergy(freezeCost);
-					handAnimationController.PlayPause();
-                    target.transform.GetComponent<Enemy>().toggleFreeze();
-                    Debug.Log("Freeze");
+					if(freezing)
+					{
+						freezing = false;
+						handAnimationController.PlayPause();
+                    	target.transform.GetComponent<Enemy>().toggleFreeze();
+                    	Debug.Log("Freeze");
+					} 
+					else if(EnergyCheck(freezeCost))
+					{
+						freezing = true;
+						RemoveEnergy(freezeCost);
+						handAnimationController.PlayPause();
+                    	target.transform.GetComponent<Enemy>().toggleFreeze();
+                    	Debug.Log("Freeze");
+					}
                 }
                 else if (target.collider.gameObject.CompareTag("Projectile") && EnergyCheck(parryCost))
                 {
