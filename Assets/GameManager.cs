@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +12,16 @@ public class GameManager : MonoBehaviour
     private HandAnimationController handAnimationController;
     public ParticleSystem muzzleFlash;
     public AudioSource fireAudio;
+
+    public AudioSource trackCalm;
+    public AudioSource trackCombat;
+
+    public bool inCombat = false;
+
+    public float combatTrackMaxVolume = 1.0f;
+
+    private IEnumerator FadeInCoroutine;
+    private IEnumerator FadeOutCoroutine;
 	private Player playerScript;
 
     // Start is called before the first frame update
@@ -41,10 +52,27 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             ActivateSlow();
+            fireAudio.pitch = 0.5f;
+            trackCombat.pitch = 0.5f;
+            trackCalm.pitch = 0.5f;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             DeactivateSlow();
+            fireAudio.pitch = 1.0f;
+            trackCombat.pitch = 1.0f;
+            trackCalm.pitch = 1.0f;
+        }
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (!inCombat)
+            {
+                EnterCombat();
+            }
+            else
+            {
+                ExitCombat();
+            }
         }
     }
 
@@ -54,5 +82,66 @@ public class GameManager : MonoBehaviour
         gunAnimator.SetTrigger("Flip :)");
         muzzleFlash.Play();
         fireAudio.Play();
+    }
+
+    public void EnterCombat()
+    {
+        if (!inCombat)
+        {
+            inCombat = true;
+            if (FadeOutCoroutine != null)
+            {
+                StopCoroutine(FadeInCoroutine);
+                trackCombat.volume = 0;
+                trackCalm.volume = 1;
+            }
+            FadeInCoroutine = FadeInCombat();
+            StartCoroutine(FadeInCoroutine);
+        }
+    }
+
+    public void ExitCombat()
+    {
+        if (inCombat)
+        {
+            inCombat = false;
+            if (FadeInCoroutine != null)
+            {
+                StopCoroutine(FadeInCoroutine);
+                trackCombat.volume = 1;
+                trackCalm.volume = 0;
+            }
+            FadeOutCoroutine = FadeOutCombat();
+            StartCoroutine(FadeOutCoroutine);
+        }
+    }
+
+    private IEnumerator FadeInCombat()
+    {
+        while (trackCombat.volume < combatTrackMaxVolume)
+        {
+            trackCombat.volume += 0.005f;
+            if (trackCalm.volume > 0)
+                trackCalm.volume -= 0.01f;
+            yield return new WaitForSeconds(0.02f);
+        }
+
+        trackCalm.volume = 0;
+
+        FadeInCoroutine = null;
+    }
+
+    private IEnumerator FadeOutCombat()
+    {
+        while (trackCombat.volume > 0)
+        {
+            trackCombat.volume -= 0.02f;
+            trackCalm.volume += 0.02f;
+            yield return new WaitForSeconds(0.02f);
+        }
+
+        trackCalm.volume = 1;
+
+        FadeOutCoroutine = null;
     }
 }
