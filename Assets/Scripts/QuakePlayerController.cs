@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     public float maxStepHeight = 0.4f;
 
     public GameObject gun;
+	public GameObject hand;
 
     // Start is called before the first frame update
     void Start()

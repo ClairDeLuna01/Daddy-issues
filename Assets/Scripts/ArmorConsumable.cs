@@ -32,7 +32,6 @@ public class ArmorConsumable : Consumable
 		transform.position = startPos + new Vector3 (0f, (float)Math.Sin(offset)/4f + 0.5f, 0f);
 		Vector3 rot = transform.rotation.eulerAngles;
         float newRot = Quaternion.LookRotation(playerToLook.transform.position - transform.position).eulerAngles.y;
-        // interpolate the rotation so it's not instant
         rot.y = Mathf.LerpAngle(rot.y, newRot, 10f * Time.deltaTime);
         transform.rotation = Quaternion.Euler(rot);
 		frame = (frame + Time.deltaTime*100f) % 360;

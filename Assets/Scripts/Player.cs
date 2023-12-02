@@ -8,12 +8,14 @@ public class Player : MonoBehaviour
 	public float Iframes = 20f;
 	public bool godMode = true;
 	private float nextDamage;
-
+	private HandAnimationController handAnimationController;
 	private GameManager gameManager;
     private Rigidbody rb;
     private PlayerController playerController;
 
 	protected void Start() {
+		playerController = GetComponent<PlayerController>();
+		handAnimationController = GameObject.Find("Hand").GetComponent<HandAnimationController>();
 		nextDamage = Time.time;
 	}
 
@@ -53,12 +55,14 @@ public class Player : MonoBehaviour
                 if (hit.collider.gameObject.CompareTag("Enemy"))
                 {
                     // freeze
+					handAnimationController.PlayPause();
                     hit.transform.GetComponent<Enemy>().toggleFreeze();
                     Debug.Log("Freeze");
                 }
                 else if (hit.collider.gameObject.CompareTag("Projectile"))
                 {
                     // deflect
+					handAnimationController.PlayRewind();
                     hit.transform.GetComponent<Projectile>().Deflect();
 
                     Debug.Log("Deflect");
