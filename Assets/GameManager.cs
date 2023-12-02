@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
 		handAnimationController.PlaySlowmo();
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
+		fireAudio.pitch = 0.5f;
+        trackCombat.pitch = 0.5f;
+        trackCalm.pitch = 0.5f;
 	}
 
 	public void DeactivateSlow() {
@@ -45,6 +48,9 @@ public class GameManager : MonoBehaviour
 		handAnimationController.PlaySlowmo();
         Time.timeScale = 1.0f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
+		fireAudio.pitch = 1.0f;
+        trackCombat.pitch = 1.0f;
+        trackCalm.pitch = 1.0f;
 	}
 
     void Update()
@@ -52,16 +58,10 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             ActivateSlow();
-            fireAudio.pitch = 0.5f;
-            trackCombat.pitch = 0.5f;
-            trackCalm.pitch = 0.5f;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
             DeactivateSlow();
-            fireAudio.pitch = 1.0f;
-            trackCombat.pitch = 1.0f;
-            trackCalm.pitch = 1.0f;
         }
         if (Input.GetKeyDown(KeyCode.X))
         {
