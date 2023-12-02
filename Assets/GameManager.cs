@@ -22,7 +22,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator FadeInCoroutine;
     private IEnumerator FadeOutCoroutine;
-	private Player playerScript;
+    private Player playerScript;
+
+    private AudioSource[] footstepSounds;
 
     // Start is called before the first frame update
     void Start()
@@ -30,28 +32,42 @@ public class GameManager : MonoBehaviour
         playerController = player.GetComponent<PlayerController>();
         gunAnimator = playerController.gun.GetComponent<Animator>();
         handAnimationController = GameObject.Find("Hand").GetComponent<HandAnimationController>();
-		playerScript = player.GetComponent<Player>();
+
+        footstepSounds = playerController.footstepSounds;
+        playerScript = player.GetComponent<Player>();
     }
 
-	public void ActivateSlow() {
-		playerScript.slowing = true;
-		handAnimationController.PlaySlowmo();
+    public void ActivateSlow()
+    {
+        playerScript.slowing = true;
+        handAnimationController.PlaySlowmo();
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
-		fireAudio.pitch = 0.5f;
+        fireAudio.pitch = 0.5f;
         trackCombat.pitch = 0.5f;
         trackCalm.pitch = 0.5f;
-	}
+        for (int i = 0; i < footstepSounds.Length; i++)
+        {
+            footstepSounds[i].pitch = 0.5f;
+        }
+        playerController.jumpSound.pitch = 0.5f;
+    }
 
-	public void DeactivateSlow() {
-		playerScript.slowing = false;
-		handAnimationController.PlaySlowmo();
+    public void DeactivateSlow()
+    {
+        playerScript.slowing = false;
+        handAnimationController.PlaySlowmo();
         Time.timeScale = 1.0f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
-		fireAudio.pitch = 1.0f;
+        fireAudio.pitch = 1.0f;
         trackCombat.pitch = 1.0f;
         trackCalm.pitch = 1.0f;
-	}
+        for (int i = 0; i < footstepSounds.Length; i++)
+        {
+            footstepSounds[i].pitch = 1.0f;
+        }
+        playerController.jumpSound.pitch = 1.0f;
+    }
 
     void Update()
     {

@@ -23,12 +23,28 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 60.0f;
     public float sensitivity = 0.005f;
     public float maxStepHeight = 0.4f;
+
+    public AudioSource[] footstepSounds;
+    public GameObject footstepSoundsLocation;
+
+    public AudioSource jumpSound;
+
     public GameObject gun;
+
+    public GameObject hands;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        footstepSounds = footstepSoundsLocation.GetComponents<AudioSource>();
+        foreach (AudioSource footstepSound in footstepSounds)
+        {
+            footstepSound.volume = 0.3f;
+        }
+
+        StartCoroutine(FootStep());
     }
 
     private void MouseMove()
@@ -77,6 +93,8 @@ public class PlayerController : MonoBehaviour
         lockGround = true;
         grounded = false;
         lockGroundStart = Time.time;
+
+        jumpSound.Play();
     }
 
     // Update is called once per frame
@@ -127,12 +145,19 @@ public class PlayerController : MonoBehaviour
         PM_AirMove(forward, side);
 
         // head bobbing
-        float bob = Mathf.Sin(Time.time * 10.0f) * 0.05f;
+        float bob = Mathf.Sin(Time.time * 10.0f) * 0.20f;
         float speed = new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
-        if (speed < 0.1f)
-            bob = 0.0f;
+
+        bob *= Mathf.Min(speed / maxSpeed, 1.0f);
 
         Camera.main.transform.localPosition = new Vector3(0.0f, .9f + bob, 0.0f);
+
+        // weapon swaying
+        // sway in an arc
+        float swayX = Mathf.Sin(Time.time * 4.0f) * 0.03f * (speed / maxSpeed);
+        float swayY = -Mathf.Abs(Mathf.Cos(Time.time * 4.0f) * 0.03f) * (speed / maxSpeed);
+
+        hands.transform.localPosition = new Vector3(swayX, swayY, 0.0f);
 
 
         MouseMove();
@@ -293,6 +318,23 @@ public class PlayerController : MonoBehaviour
             {
                 rb.velocity += new Vector3(0.0f, hit.distance * 10f, 0.0f);
             }
+        }
+    }
+
+    void PlayRandomStepSound()
+    {
+        int index = Random.Range(0, footstepSounds.Length);
+        footstepSounds[index].Play();
+    }
+
+    IEnumerator FootStep()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+            float speed = new Vector2(rb.velocity.x, rb.velocity.z).magnitude;
+            if (grounded && speed > 0.05f)
+                PlayRandomStepSound();
         }
     }
 }
