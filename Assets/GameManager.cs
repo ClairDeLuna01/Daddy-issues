@@ -252,6 +252,8 @@ public class GameManager : MonoBehaviour
                 arenas[i].Reset();
             }
         }
+
+        playerScript.weapon.transform.rotation = Quaternion.Euler(-90f, 0, 0);
     }
 
     public void SaveGame()
