@@ -21,8 +21,8 @@ public class UIDisplay : MonoBehaviour
         var actualBar = root.Query<ProgressBar>("energy-bar").Children<VisualElement>("unity-progress-bar").First();
         actualBar.style.backgroundColor = Color.cyan;
 
-        var barBackground = root.Query<ProgressBar>("energy-bar").Children<Label>().First();
-        barBackground.style.backgroundColor = Color.clear;
+        Label armorIcon = root.Q<Label>("armor-icon");
+        armorIcon.style.backgroundColor = Color.clear;
     }
 
     // Update is called once per frame

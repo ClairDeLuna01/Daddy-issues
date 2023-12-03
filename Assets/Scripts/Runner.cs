@@ -23,7 +23,7 @@ public class Runner : Enemy
         hitBox = GetComponent<BoxCollider>();
         enemyType = EnemyType.Runner;
         runnerAnimatorController = GetComponent<RunnerAnimatorController>();
-        // if (runnerAnimatorController != null) runnerAnimatorController.PlayIdle();
+        if (runnerAnimatorController != null) runnerAnimatorController.PlayIdle();
     }
 
     private void OnEnable()
@@ -64,15 +64,15 @@ public class Runner : Enemy
 
     void Run()
     {
-        // runnerAnimatorController.PlayRun();
+        runnerAnimatorController.PlayRun();
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
         transform.position += speed * Time.deltaTime * direction;
     }
 
     void Attack()
     {
-        // runnerAnimatorController.PlayIdle();
-        // runnerAnimatorController.PlayAttack();
+        runnerAnimatorController.PlayIdle();
+        runnerAnimatorController.PlayAttack();
         if (!attacking && !frozen)
         {
             attackRoutine = AttackRoutine();
