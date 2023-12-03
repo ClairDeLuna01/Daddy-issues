@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
     [System.NonSerialized]
     public Boss bossEnemy;
 
+    private AudioSource rewindSound;
+    private AudioSource pauseSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -64,6 +67,9 @@ public class GameManager : MonoBehaviour
         SaveGame();
 
         bossEnemy = boss.GetComponent<Boss>();
+
+        rewindSound = playerScript.rewindSound;
+        pauseSound = playerScript.pauseSound;
     }
 
 
@@ -82,6 +88,8 @@ public class GameManager : MonoBehaviour
             footstepSounds[i].pitch = 0.5f;
         }
         playerController.jumpSound.pitch = 0.5f;
+        rewindSound.pitch = 0.5f;
+        pauseSound.pitch = 0.5f;
     }
 
     public void DeactivateSlow(bool playAnim = true)
@@ -99,6 +107,8 @@ public class GameManager : MonoBehaviour
             footstepSounds[i].pitch = 1.0f;
         }
         playerController.jumpSound.pitch = 1.0f;
+        rewindSound.pitch = 1.0f;
+        pauseSound.pitch = 1.0f;
     }
 
     void Update()

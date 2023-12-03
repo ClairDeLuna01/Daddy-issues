@@ -25,6 +25,10 @@ public class Boss : Enemy
 
     IEnumerator attackRoutine = null;
 
+    public AudioSource pistolFire;
+    public AudioSource automaticRifleFire;
+    public AudioSource huntingRifleFire;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -95,8 +99,8 @@ public class Boss : Enemy
         attacking = true;
         yield return new WaitForSeconds(0.5f);
         // choose a random attack type
-        AttackType attackType = (AttackType)Random.Range(0, 4);
-        // AttackType attackType = AttackType.Predictive;
+        // AttackType attackType = (AttackType)Random.Range(0, 4);
+        AttackType attackType = AttackType.Burst;
 
 
         switch (attackType)
@@ -111,7 +115,8 @@ public class Boss : Enemy
                         GameObject projectile = Instantiate(projectilePrefab, transform.position + direction, bulletRotQ);
                         projectile.GetComponent<Projectile>().parent = gameObject;
                         projectile.GetComponent<Rigidbody>().velocity = direction * 25.0f;
-                        yield return new WaitForSeconds(0.05f);
+                        automaticRifleFire.Play();
+                        yield return new WaitForSeconds(0.13f);
                     }
                     break;
                 }
@@ -136,6 +141,7 @@ public class Boss : Enemy
                     GameObject projectile3 = Instantiate(projectilePrefab, transform.position, bulletRotQ3);
                     projectile3.GetComponent<Projectile>().parent = gameObject;
                     projectile3.GetComponent<Rigidbody>().velocity = direction3 * 20.0f;
+                    pistolFire.Play();
                 }
                 break;
 
@@ -150,6 +156,7 @@ public class Boss : Enemy
                     projectile.GetComponent<Rigidbody>().velocity = direction * 10.0f;
                     projectile.GetComponent<Projectile>().homing = true;
                     projectile.GetComponent<Projectile>().aliveTime = 2.5f;
+                    pistolFire.Play();
                 }
                 break;
 
@@ -158,6 +165,8 @@ public class Boss : Enemy
                 {
                     for (int i = 0; i < 4; i++)
                     {
+                        huntingRifleFire.Play();
+                        yield return new WaitForSeconds(.908f);
                         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
                         float distance = Vector3.Distance(gameManager.player.transform.position, transform.position);
                         Vector3 playerVelocity = gameManager.player.GetComponent<Rigidbody>().velocity;
@@ -168,7 +177,7 @@ public class Boss : Enemy
                         GameObject projectile = Instantiate(projectilePrefab, transform.position + direction, bulletRotQ);
                         projectile.GetComponent<Projectile>().parent = gameObject;
                         projectile.GetComponent<Rigidbody>().velocity = (predictedPosition - transform.position).normalized * 40.0f;
-                        yield return new WaitForSeconds(.66f);
+                        yield return new WaitForSeconds(.6f);
                     }
                 }
                 break;

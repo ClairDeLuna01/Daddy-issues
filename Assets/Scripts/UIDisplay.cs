@@ -38,13 +38,11 @@ public class UIDisplay : MonoBehaviour
         if (gameManager.bossFight)
         {
             bossHealth.visible = true;
-            // bossHealth.value = gameManager.bossEnemy.hp / gameManager.bossEnemy.maxHp * bossHealth.highValue;
             bossHealth.value = gameManager.bossEnemy.hp;
         }
         else
         {
             bossHealth.visible = false;
         }
-
     }
 }

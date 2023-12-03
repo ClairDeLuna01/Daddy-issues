@@ -14,9 +14,8 @@ GameObject:
   - component: {fileID: 7180836213585650765}
   - component: {fileID: 2827559600968370724}
   - component: {fileID: 1388902503494709168}
-  - component: {fileID: 5562017114325996324}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: Bullet old
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,26 +157,3 @@ MonoBehaviour:
     m_Bits: 0
   aliveTime: 5
   homing: 0
---- !u!136 &5562017114325996324
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8005276073808383838}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.75
-  m_Height: 3
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
