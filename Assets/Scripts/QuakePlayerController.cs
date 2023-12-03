@@ -88,10 +88,7 @@ public class PlayerController : MonoBehaviour
         if (!grounded)
             return;
 
-        Vector3 velocity = rb.velocity;
-        velocity.y += jumpForce;
-
-        rb.velocity = velocity;
+        rb.velocity += new Vector3(0.0f, jumpForce, 0.0f);
 
         lockGround = true;
         grounded = false;
@@ -119,11 +116,6 @@ public class PlayerController : MonoBehaviour
 
         PM_Friction();
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Jump();
-        }
-
 
         float forward = 0.0f;
         float side = 0.0f;
@@ -146,6 +138,13 @@ public class PlayerController : MonoBehaviour
         }
 
         PM_AirMove(forward, side);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Jump();
+        }
+
+        // Debug.Log(rb.velocity);
 
         // head bobbing
         float bob = Mathf.Sin(Time.time * 10.0f) * 0.20f;

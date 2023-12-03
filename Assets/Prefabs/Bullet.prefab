@@ -152,10 +152,10 @@ MonoBehaviour:
   parent: {fileID: 0}
   deflectedInclude:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   deflectedExclude:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 510
   aliveTime: 5
   homing: 0
 --- !u!136 &5562017114325996324

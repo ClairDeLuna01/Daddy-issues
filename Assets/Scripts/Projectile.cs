@@ -43,6 +43,8 @@ public class Projectile : MonoBehaviour
         // 	player.Hit();
         // }
 
+        if (other.transform.CompareTag("Arena"))
+            return;
         if (other.transform.CompareTag("Player") && !deflected)
         {
             gameManager.playerScript.Hit();
@@ -69,14 +71,17 @@ public class Projectile : MonoBehaviour
         {
             // aim for parent
             Vector3 dir = parent.transform.position + new Vector3(0, 1.0f, 0) - transform.position;
+            Debug.Log(dir.normalized);
 
             rb.velocity = dir.normalized * 20.0f;
 
             // face the parent
-            transform.LookAt(parent.transform);
+            Vector3 rot = new(90f, Quaternion.LookRotation(dir).eulerAngles.y, 0);
+            Quaternion bulletRotQ = Quaternion.Euler(rot);
+            transform.rotation = bulletRotQ;
 
             // destroy after 5 seconds
-            Destroy(gameObject, 5.0f);
+            // Destroy(gameObject, 5.0f);
         }
         else if (homing)
         {
@@ -86,7 +91,9 @@ public class Projectile : MonoBehaviour
             rb.velocity = dir.normalized * 10.0f;
 
             // face the player
-            transform.LookAt(gameManager.player.transform);
+            Vector3 rot = new(90f, Quaternion.LookRotation(dir).eulerAngles.y, 0);
+            Quaternion bulletRotQ = Quaternion.Euler(rot);
+            transform.rotation = bulletRotQ;
 
         }
     }

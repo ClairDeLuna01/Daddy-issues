@@ -1147,6 +1147,7 @@ MonoBehaviour:
   gunScript: {fileID: 1703221308}
   rewindSound: {fileID: 248777492}
   pauseSound: {fileID: 248777491}
+  weapon: {fileID: 1946540862}
 --- !u!114 &248777489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3900,7 +3901,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3731093483531516109, guid: fdaebae0195e8cc47802a378023d9c3c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 45.846973
+      value: 52.35
       objectReference: {fileID: 0}
     - target: {fileID: 3731093483531516109, guid: fdaebae0195e8cc47802a378023d9c3c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -10501,8 +10502,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 36.937115, y: 5.6768, z: 12.371239}
-  m_Center: {x: 2.5157986, y: 0.2419548, z: -0.9357681}
+  m_Size: {x: 36.937115, y: 5.6768, z: 11.650841}
+  m_Center: {x: 2.5157986, y: 0.2419548, z: -1.2959671}
 --- !u!4 &1005743623
 Transform:
   m_ObjectHideFlags: 0
@@ -10712,6 +10713,32 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 8552134717624371188, guid: 970ecea3bbc34af4da002a7f22defc89, type: 3}
+--- !u!1 &1057416235 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9016633047566530039, guid: 970ecea3bbc34af4da002a7f22defc89, type: 3}
+  m_PrefabInstance: {fileID: 1522040184}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1057416239
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1057416235}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.6729618, y: 19.799997, z: 9.900002}
+  m_Center: {x: 0.0085493345, y: -9.899995, z: -0.00003025564}
 --- !u!1001 &1084524500
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11143,6 +11170,10 @@ PrefabInstance:
     - target: {fileID: 9211354034918405878, guid: 4783fd255cab6934688a0f10bbb4c527, type: 3}
       propertyPath: m_Name
       value: Portal Garage
+      objectReference: {fileID: 0}
+    - target: {fileID: 9211354034918405878, guid: 4783fd255cab6934688a0f10bbb4c527, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9211354034918405879, guid: 4783fd255cab6934688a0f10bbb4c527, type: 3}
       propertyPath: m_LocalScale.y
@@ -13097,7 +13128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 970ecea3bbc34af4da002a7f22defc89, type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1318388245581369980, guid: 970ecea3bbc34af4da002a7f22defc89, type: 3}
       propertyPath: m_Layer
@@ -13302,6 +13333,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8513859187771203891, guid: 970ecea3bbc34af4da002a7f22defc89, type: 3}
       insertIndex: -1
       addedObject: {fileID: 68438740}
+    - targetCorrespondingSourceObject: {fileID: 9016633047566530039, guid: 970ecea3bbc34af4da002a7f22defc89, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1057416239}
     - targetCorrespondingSourceObject: {fileID: -7715149357510031616, guid: 970ecea3bbc34af4da002a7f22defc89, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1866213659}
@@ -15420,7 +15454,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30

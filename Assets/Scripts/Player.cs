@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
     public AudioSource rewindSound;
     public AudioSource pauseSound;
 
+    public GameObject weapon;
+
     protected void Start()
     {
         playerController = GetComponent<PlayerController>();
