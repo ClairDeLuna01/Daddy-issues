@@ -99,8 +99,8 @@ public class Boss : Enemy
         attacking = true;
         yield return new WaitForSeconds(0.5f);
         // choose a random attack type
-        // AttackType attackType = (AttackType)Random.Range(0, 4);
-        AttackType attackType = AttackType.Burst;
+        AttackType attackType = (AttackType)Random.Range(0, 4);
+        // AttackType attackType = AttackType.Burst;
 
 
         switch (attackType)
