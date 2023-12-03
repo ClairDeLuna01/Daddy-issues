@@ -12260,7 +12260,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 500
   maxHp: 500
-  aggro: 1
+  aggro: 0
   enemyType: 2
   projectilePrefab: {fileID: 8005276073808383838, guid: 38f274026d7d2674bac5a8229a5b06b2, type: 3}
   speed: 10
