@@ -20,6 +20,7 @@ public class EnemyState
     }
 }
 
+[System.Serializable]
 public class GameState
 {
     public Vector3 playerPosition;

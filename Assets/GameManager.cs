@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     [System.NonSerialized]
     public PlayerController playerController;
-    private Animator gunAnimator;
+    [System.NonSerialized]
+    public Animator gunAnimator;
     private HandAnimationController handAnimationController;
     public ParticleSystem muzzleFlash;
     public AudioSource fireAudio;
@@ -26,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     private AudioSource[] footstepSounds;
 
-    private GameState save = null;
+    public GameState save = null;
 
     public GameObject[] enemies;
     public GameObject runnerPrefab;
@@ -254,6 +255,8 @@ public class GameManager : MonoBehaviour
         }
 
         playerScript.weapon.transform.rotation = Quaternion.Euler(-90f, 0, 0);
+        playerScript.weapon.transform.position = Vector3.zero;
+        gunAnimator.Play("Idle", -1, 0.0f);
     }
 
     public void SaveGame()

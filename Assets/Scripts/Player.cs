@@ -75,6 +75,10 @@ public class Player : MonoBehaviour
 
                 gunScript.waitUntilMouse0ReleasedBeforeFiring = true;
 
+                weapon.transform.position = Vector3.zero;
+                weapon.transform.rotation = Quaternion.Euler(-90f, 0, 0);
+                gameManager.gunAnimator.Play("Idle", -1, 0.0f);
+
                 gameObject.SetActive(false);
             }
         }
