@@ -12,16 +12,20 @@ public class Projectile : MonoBehaviour
     public LayerMask deflectedExclude;
     private Rigidbody rb;
 
+    public float aliveTime = 5.0f;
+
+    public bool homing = false;
+
     // Start is called before the first frame update
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-        StartCoroutine(destroyAfterTime(5.0f));
+        StartCoroutine(DestroyAfterTime(aliveTime));
 
         rb = GetComponent<Rigidbody>();
     }
 
-    IEnumerator destroyAfterTime(float time)
+    IEnumerator DestroyAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
         if (!deflected)
@@ -32,21 +36,21 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-		// Destroy(gameObject);
+        // Destroy(gameObject);
         // Player player = other.transform.GetComponent<Player>();
-		// if(player != null) 
-		// {
-		// 	player.Hit();
-		// }
+        // if(player != null) 
+        // {
+        // 	player.Hit();
+        // }
 
         if (other.transform.CompareTag("Player") && !deflected)
         {
-            Debug.Log("Player hit");
+            gameManager.playerScript.Hit();
         }
         else if (other.transform.CompareTag("Enemy") && deflected)
         {
-            Debug.Log("Enemy hit");
-            other.transform.GetComponent<Enemy>().kill();
+            // Debug.Log("Enemy hit");
+            other.transform.GetComponent<Enemy>().Hit(100);
         }
         Destroy(gameObject);
     }
@@ -68,15 +72,22 @@ public class Projectile : MonoBehaviour
 
             rb.velocity = dir.normalized * 20.0f;
 
-            // // rotate on the Y axis only to face the parent
-            // Vector3 rot = transform.rotation.eulerAngles;
-            // float newRot = Quaternion.LookRotation(parent.transform.position - transform.position).eulerAngles.y;
-            // // interpolate the rotation so it's not instant
-            // rot.y = Mathf.LerpAngle(rot.y, newRot, 10f * Time.deltaTime);
-            // transform.rotation = Quaternion.Euler(rot);
+            // face the parent
+            transform.LookAt(parent.transform);
 
             // destroy after 5 seconds
             Destroy(gameObject, 5.0f);
+        }
+        else if (homing)
+        {
+            // aim for player
+            Vector3 dir = gameManager.player.transform.position - transform.position;
+
+            rb.velocity = dir.normalized * 10.0f;
+
+            // face the player
+            transform.LookAt(gameManager.player.transform);
+
         }
     }
 }

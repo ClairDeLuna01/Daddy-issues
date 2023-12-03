@@ -13,6 +13,8 @@ public class Runner : Enemy
 
     private RunnerAnimatorController runnerAnimatorController;
 
+    private IEnumerator attackRoutine = null;
+
 
     protected new void Start()
     {
@@ -21,13 +23,22 @@ public class Runner : Enemy
         hitBox = GetComponent<BoxCollider>();
         enemyType = EnemyType.Runner;
         runnerAnimatorController = GetComponent<RunnerAnimatorController>();
-        if (runnerAnimatorController != null) runnerAnimatorController.PlayIdle();
+        // if (runnerAnimatorController != null) runnerAnimatorController.PlayIdle();
+    }
+
+    private void OnEnable()
+    {
+        attacking = false;
+        attackingCooldown = false;
+        if (hitBox != null)
+            hitBox.enabled = false;
+        attackRoutine = null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (aggro)
+        if (aggro && !frozen)
         {
             if (!attackingCooldown && !attacking)
             {
@@ -53,18 +64,19 @@ public class Runner : Enemy
 
     void Run()
     {
-        runnerAnimatorController.PlayRun();
+        // runnerAnimatorController.PlayRun();
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
         transform.position += speed * Time.deltaTime * direction;
     }
 
     void Attack()
     {
-        runnerAnimatorController.PlayIdle();
-        runnerAnimatorController.PlayAttack();
-        if (!attacking)
+        // runnerAnimatorController.PlayIdle();
+        // runnerAnimatorController.PlayAttack();
+        if (!attacking && !frozen)
         {
-            StartCoroutine(AttackRoutine());
+            attackRoutine = AttackRoutine();
+            StartCoroutine(attackRoutine);
         }
 
     }
@@ -89,6 +101,8 @@ public class Runner : Enemy
 
         yield return new WaitForSeconds(1.0f);
         attackingCooldown = false;
+
+        attackRoutine = null;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -105,5 +119,35 @@ public class Runner : Enemy
         {
             player.Hit();
         }
+    }
+
+    public override void Freeze()
+    {
+        base.Freeze();
+
+        if (attacking)
+        {
+            StopCoroutine(attackRoutine);
+            attacking = false;
+        }
+
+        rb.velocity = Vector3.zero;
+
+        // freeze rb
+        rb.constraints = RigidbodyConstraints.FreezeAll;
+    }
+
+    public override void Unfreeze()
+    {
+        base.Unfreeze();
+
+        if (attacking)
+        {
+            attackRoutine = AttackRoutine();
+            StartCoroutine(attackRoutine);
+        }
+
+        // unfreeze rb
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 }

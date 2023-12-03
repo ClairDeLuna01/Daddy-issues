@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
 
     public Gun gunScript;
 
+    public AudioSource rewindSound;
+    public AudioSource pauseSound;
+
     protected void Start()
     {
         playerController = GetComponent<PlayerController>();
@@ -112,9 +115,9 @@ public class Player : MonoBehaviour
                 {
                     freezing = false;
                     target.transform.GetComponent<Enemy>().Unfreeze();
+                    pauseSound.Stop();
                 }
             }
-
         }
 
         if (Input.GetMouseButtonDown(1))
@@ -130,20 +133,23 @@ public class Player : MonoBehaviour
             {
                 if (target.collider.gameObject.CompareTag("Enemy"))
                 {
+
                     // freeze
                     if (freezing)
                     {
+                        pauseSound.Stop();
                         freezing = false;
                         handAnimationController.PlayPause();
-                        target.transform.GetComponent<Enemy>().toggleFreeze();
+                        target.transform.GetComponent<Enemy>().ToggleFreeze();
                         Debug.Log("Freeze");
                     }
                     else if (EnergyCheck(freezeCost))
                     {
+                        pauseSound.Play();
                         freezing = true;
                         RemoveEnergy(freezeCost);
                         handAnimationController.PlayPause();
-                        target.transform.GetComponent<Enemy>().toggleFreeze();
+                        target.transform.GetComponent<Enemy>().ToggleFreeze();
                         Debug.Log("Freeze");
                     }
                 }
@@ -154,6 +160,7 @@ public class Player : MonoBehaviour
                     handAnimationController.PlayRewind();
                     target.transform.GetComponent<Projectile>().Deflect();
                     Debug.Log("Deflect");
+                    rewindSound.Play();
                 }
             }
         }
