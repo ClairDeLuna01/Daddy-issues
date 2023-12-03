@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ranger : Enemy
 {
     public GameObject projectilePrefab;
-    public static float speed = 10.0f;
+    public static float speed = 3.0f;
     public static float range = 15.0f;
     public static float attackCooldown = 1.0f;
 
@@ -35,7 +35,6 @@ public class Ranger : Enemy
 
     void Move()
     {
-        rangerAnimatorController.PlayRun();
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
         transform.position += speed * Time.deltaTime * direction;
     }
@@ -84,19 +83,18 @@ public class Ranger : Enemy
 
     void Attack()
     {
-        if (rangerAnimatorController != null) rangerAnimatorController.PlayIdle();
         if (!attacking)
         {
             attackRoutine = AttackRoutine();
             StartCoroutine(attackRoutine);
         }
-        if (rangerAnimatorController != null) rangerAnimatorController.PlayShoot();
     }
 
     IEnumerator AttackRoutine()
     {
+		if (rangerAnimatorController != null) rangerAnimatorController.PlayShoot();
         attacking = true;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.8f);
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
         Vector3 bulletRot = new(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
         Quaternion bulletRotQ = Quaternion.Euler(bulletRot);
@@ -105,6 +103,7 @@ public class Ranger : Enemy
         projectile.GetComponent<Rigidbody>().velocity = direction * 20.0f;
         attackingCooldown = true;
         // walk in a random direction
+		if (rangerAnimatorController != null) rangerAnimatorController.PlayRun();
         Vector3 randomDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
         rb.velocity = randomDirection * speed;
         yield return new WaitForSeconds(attackCooldown / 2);
