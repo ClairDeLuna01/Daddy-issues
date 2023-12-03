@@ -8,7 +8,6 @@ public class EnemyState
     public Quaternion rotation;
     public int health;
     public bool aggro;
-
     public Enemy.EnemyType enemyType;
 
     public EnemyState(Vector3 position, Quaternion rotation, int health, Enemy.EnemyType enemyType, bool aggro)
@@ -31,8 +30,9 @@ public class GameState
     public int energy;
 
     public EnemyState[] AliveEnemies;
+    public bool[] completedArenas;
 
-    public GameState(Vector3 playerPosition, Quaternion playerRotation, bool armor, bool godMode, bool infiniteEnergy, int energy, EnemyState[] AliveEnemies)
+    public GameState(Vector3 playerPosition, Quaternion playerRotation, bool armor, bool godMode, bool infiniteEnergy, int energy, EnemyState[] AliveEnemies, bool[] completedArenas)
     {
         this.playerPosition = playerPosition;
         this.playerRotation = playerRotation;
@@ -41,7 +41,6 @@ public class GameState
         this.infiniteEnergy = infiniteEnergy;
         this.energy = energy;
         this.AliveEnemies = AliveEnemies;
+        this.completedArenas = completedArenas;
     }
-
-
 }

@@ -25,6 +25,14 @@ public class Ranger : Enemy
         if (rangerAnimatorController != null) rangerAnimatorController.PlayIdle();
     }
 
+    private void OnEnable()
+    {
+        attacking = false;
+        attackingCooldown = false;
+        attackRoutine = null;
+        facePlayer = false;
+    }
+
     void Move()
     {
         rangerAnimatorController.PlayRun();
@@ -121,6 +129,8 @@ public class Ranger : Enemy
         }
 
         rb.velocity = Vector3.zero;
+
+        rb.constraints = RigidbodyConstraints.FreezeAll;
     }
 
     public override void Unfreeze()
@@ -132,5 +142,7 @@ public class Ranger : Enemy
             attackRoutine = AttackRoutine();
             StartCoroutine(attackRoutine);
         }
+
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 }

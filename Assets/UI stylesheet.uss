@@ -1,0 +1,9 @@
+.boss-hp .unity-progress-bar__progress {
+    background-color: darkred;
+}
+
+.boss-hp .unity-progress-bar__background {
+    min-height: 130%;
+}
+
+

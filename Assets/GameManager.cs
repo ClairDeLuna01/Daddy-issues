@@ -22,17 +22,25 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator FadeInCoroutine;
     private IEnumerator FadeOutCoroutine;
-    private Player playerScript;
+    public Player playerScript;
 
     private AudioSource[] footstepSounds;
 
     private GameState save = null;
 
-    private GameObject[] enemies;
+    public GameObject[] enemies;
     public GameObject runnerPrefab;
     public GameObject rangerPrefab;
 
+    [System.NonSerialized]
+    public Arena[] arenas;
+
     public bool enableMusic = true;
+
+    public bool bossFight = false;
+    public GameObject boss;
+    [System.NonSerialized]
+    public Enemy bossEnemy;
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +53,7 @@ public class GameManager : MonoBehaviour
         playerScript = player.GetComponent<Player>();
 
         enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        arenas = GameObject.FindObjectsOfType<Arena>();
 
         if (!enableMusic)
         {
@@ -53,7 +62,11 @@ public class GameManager : MonoBehaviour
         }
 
         SaveGame();
+
+        bossEnemy = boss.GetComponent<Enemy>();
     }
+
+
 
     public void ActivateSlow()
     {
@@ -207,29 +220,28 @@ public class GameManager : MonoBehaviour
         playerScript.energy = save.energy;
         for (int i = 0; i < enemies.Length; i++)
         {
-            Destroy(enemies[i]);
+            enemies[i].SetActive(false);
         }
-        enemies = new GameObject[save.AliveEnemies.Length];
+
         for (int i = 0; i < save.AliveEnemies.Length; i++)
         {
             EnemyState enemyState = save.AliveEnemies[i];
-            GameObject enemy;
-            if (enemyState.enemyType == Enemy.EnemyType.Runner)
-            {
-                enemy = Instantiate(runnerPrefab, enemyState.position, enemyState.rotation);
-            }
-            else
-            {
-                enemy = Instantiate(rangerPrefab, enemyState.position, enemyState.rotation);
-            }
-            enemy.GetComponent<Enemy>().hp = enemyState.health;
-            enemy.GetComponent<Enemy>().aggro = enemyState.aggro;
-            enemies[i] = enemy;
+            enemies[i].SetActive(true);
+            enemies[i].GetComponent<Enemy>().hp = enemyState.health;
+            enemies[i].GetComponent<Enemy>().aggro = enemyState.aggro;
         }
 
         ExitCombat();
         DeactivateSlow(false);
         player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+
+        for (int i = 0; i < arenas.Length; i++)
+        {
+            if (!save.completedArenas[i])
+            {
+                arenas[i].Reset();
+            }
+        }
     }
 
     public void SaveGame()
@@ -238,8 +250,15 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < enemies.Length; i++)
         {
             Enemy enemy = enemies[i].GetComponent<Enemy>();
-            enemyStates[i] = new EnemyState(enemy.transform.position, enemy.transform.rotation, enemy.hp, enemy.enemyType, enemy.aggro);
+            if (enemy != null && enemy.hp > 0)
+                enemyStates[i] = new EnemyState(enemy.transform.position, enemy.transform.rotation, enemy.hp, enemy.enemyType, enemy.aggro);
         }
-        save = new GameState(player.transform.position, player.transform.rotation, playerScript.armor, playerScript.godMode, playerScript.infiniteEnergy, playerScript.energy, enemyStates);
+        bool[] completedArenas = new bool[arenas.Length];
+        for (int i = 0; i < arenas.Length; i++)
+        {
+            completedArenas[i] = arenas[i].cleared;
+        }
+
+        save = new GameState(player.transform.position, player.transform.rotation, playerScript.armor, playerScript.godMode, playerScript.infiniteEnergy, playerScript.energy, enemyStates, completedArenas);
     }
 }

@@ -7,10 +7,12 @@ public class Enemy : MonoBehaviour
     public enum EnemyType
     {
         Runner,
-        Ranger
+        Ranger,
+        Boss
     }
 
     public int hp = 100;
+    public int maxHp = 100;
     public bool aggro = false;
     protected bool frozen = false;
 
@@ -23,6 +25,7 @@ public class Enemy : MonoBehaviour
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         rb = GetComponent<Rigidbody>();
+
     }
 
     public void Hit(int damage)
@@ -36,7 +39,9 @@ public class Enemy : MonoBehaviour
 
     void Die()
     {
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        frozen = false;
+        gameManager.playerScript.freezing = false;
     }
 
     void Aggro()
@@ -58,7 +63,7 @@ public class Enemy : MonoBehaviour
         frozen = false;
     }
 
-    public void toggleFreeze()
+    public void ToggleFreeze()
     {
         if (frozen)
         {
@@ -70,7 +75,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    public void kill()
+    public void Kill()
     {
         hp = 0;
         Die();

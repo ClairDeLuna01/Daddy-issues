@@ -135,7 +135,7 @@ public class Player : MonoBehaviour
                     {
                         freezing = false;
                         handAnimationController.PlayPause();
-                        target.transform.GetComponent<Enemy>().toggleFreeze();
+                        target.transform.GetComponent<Enemy>().ToggleFreeze();
                         Debug.Log("Freeze");
                     }
                     else if (EnergyCheck(freezeCost))
@@ -143,7 +143,7 @@ public class Player : MonoBehaviour
                         freezing = true;
                         RemoveEnergy(freezeCost);
                         handAnimationController.PlayPause();
-                        target.transform.GetComponent<Enemy>().toggleFreeze();
+                        target.transform.GetComponent<Enemy>().ToggleFreeze();
                         Debug.Log("Freeze");
                     }
                 }
