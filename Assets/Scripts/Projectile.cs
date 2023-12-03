@@ -68,7 +68,7 @@ public class Projectile : MonoBehaviour
         if (deflected)
         {
             // aim for parent
-            Vector3 dir = parent.transform.position - transform.position;
+            Vector3 dir = parent.transform.position + new Vector3(0, 1.0f, 0) - transform.position;
 
             rb.velocity = dir.normalized * 20.0f;
 

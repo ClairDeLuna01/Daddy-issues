@@ -96,6 +96,7 @@ public class Ranger : Enemy
         if (rangerAnimatorController != null) rangerAnimatorController.PlayShoot();
         attacking = true;
         yield return new WaitForSeconds(0.8f);
+        transform.position += new Vector3(0, 1f, 0);
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
         Vector3 bulletRot = new(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
         Quaternion bulletRotQ = Quaternion.Euler(bulletRot);
@@ -107,6 +108,7 @@ public class Ranger : Enemy
         if (rangerAnimatorController != null) rangerAnimatorController.PlayRun();
         Vector3 randomDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
         rb.velocity = randomDirection * speed;
+        transform.position -= new Vector3(0, 1f, 0);
         yield return new WaitForSeconds(attackCooldown / 2);
         attackingCooldown = false;
         rb.velocity = Vector3.zero;
