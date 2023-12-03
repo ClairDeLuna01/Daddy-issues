@@ -12,6 +12,7 @@ TagManager:
   - KeyCardUpstairs1
   - KeyCardUpstairs2
   - KeyCardGarage
+  - BossWeapon
   layers:
   - Default
   - TransparentFX

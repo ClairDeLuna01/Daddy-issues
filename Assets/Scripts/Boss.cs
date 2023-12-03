@@ -12,6 +12,13 @@ public class Boss : Enemy
         Predictive
     }
 
+    public enum HeldWeaponType
+    {
+        Shotgun,
+        Rifle,
+        AR
+    };
+
     public GameObject projectilePrefab;
     public float speed = 10.0f;
     public float range = 15.0f;
@@ -29,11 +36,16 @@ public class Boss : Enemy
     public AudioSource automaticRifleFire;
     public AudioSource huntingRifleFire;
 
+    public HeldWeaponType heldWeaponType = HeldWeaponType.Shotgun;
+
+    private Animator bossAnimator;
+
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
         enemyType = EnemyType.Boss;
+        bossAnimator = GetComponent<Animator>();
     }
 
     private void OnEnable()
@@ -60,15 +72,17 @@ public class Boss : Enemy
                 float distance = Vector3.Distance(gameManager.player.transform.position, transform.position);
                 if (distance > range)
                 {
+                    bossAnimator.SetBool("moving", true);
                     Move();
                 }
                 else
                 {
+                    bossAnimator.SetBool("moving", false);
                     Attack();
                 }
                 // rotate on the Y axis only to face the player
                 Vector3 rot = transform.rotation.eulerAngles;
-                float newRot = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y;
+                float newRot = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y + 180;
                 // interpolate the rotation so it's not instant
                 rot.y = Mathf.LerpAngle(rot.y, newRot, 10f * Time.deltaTime);
                 transform.rotation = Quaternion.Euler(rot);
@@ -77,7 +91,7 @@ public class Boss : Enemy
             {
                 // rotate on the Y axis only to face the player
                 Vector3 rot = transform.rotation.eulerAngles;
-                float newRot = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y;
+                float newRot = Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y + 180;
                 // interpolate the rotation so it's not instant
                 rot.y = Mathf.LerpAngle(rot.y, newRot, 10f * Time.deltaTime);
                 transform.rotation = Quaternion.Euler(rot);
@@ -97,6 +111,7 @@ public class Boss : Enemy
     IEnumerator AttackRoutine()
     {
         attacking = true;
+        facePlayer = true;
         yield return new WaitForSeconds(0.5f);
         // choose a random attack type
         AttackType attackType = (AttackType)Random.Range(0, 4);
@@ -107,8 +122,12 @@ public class Boss : Enemy
         {
             case AttackType.Burst: // projectileCount projectiles in quick succession
                 {
+                    heldWeaponType = HeldWeaponType.AR;
+                    bossAnimator.SetTrigger("ChangeWeapon");
+                    bossAnimator.SetBool("shooting", true);
                     for (int i = 0; i < projectileCount; i++)
                     {
+                        transform.position += new Vector3(0, 1.0f, 0);
                         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
                         Vector3 bulletRot = new(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
                         Quaternion bulletRotQ = Quaternion.Euler(bulletRot);
@@ -116,12 +135,17 @@ public class Boss : Enemy
                         projectile.GetComponent<Projectile>().parent = gameObject;
                         projectile.GetComponent<Rigidbody>().velocity = direction * 25.0f;
                         automaticRifleFire.Play();
+                        transform.position -= new Vector3(0, 1.0f, 0);
                         yield return new WaitForSeconds(0.13f);
                     }
                     break;
                 }
             case AttackType.Spread: // 3 projectiles in a 45 degree spread fired at the same time
                 {
+                    transform.position += new Vector3(0, 1.0f, 0);
+                    heldWeaponType = HeldWeaponType.Shotgun;
+                    bossAnimator.SetTrigger("ChangeWeapon");
+                    bossAnimator.SetBool("shooting", true);
                     const float spread = 30f;
                     Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
                     Vector3 bulletRot = new(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
@@ -142,12 +166,17 @@ public class Boss : Enemy
                     projectile3.GetComponent<Projectile>().parent = gameObject;
                     projectile3.GetComponent<Rigidbody>().velocity = direction3 * 20.0f;
                     pistolFire.Play();
+                    transform.position -= new Vector3(0, 1.0f, 0);
                 }
                 break;
 
             // fires a slow homing projectile that follows the player for a short time
             case AttackType.Homing:
                 {
+                    transform.position += new Vector3(0, 1.0f, 0);
+                    heldWeaponType = HeldWeaponType.Shotgun;
+                    bossAnimator.SetTrigger("ChangeWeapon");
+                    bossAnimator.SetBool("shooting", true);
                     Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
                     Vector3 bulletRot = new(90f, Quaternion.LookRotation(gameManager.player.transform.position - transform.position).eulerAngles.y, 0);
                     Quaternion bulletRotQ = Quaternion.Euler(bulletRot);
@@ -157,16 +186,21 @@ public class Boss : Enemy
                     projectile.GetComponent<Projectile>().homing = true;
                     projectile.GetComponent<Projectile>().aliveTime = 2.5f;
                     pistolFire.Play();
+                    transform.position -= new Vector3(0, 1.0f, 0);
                 }
                 break;
 
             // slowly fires multiple fast projectiles that predict the player's position based on their current velocity and the distance between the player and the boss
             case AttackType.Predictive:
                 {
+                    heldWeaponType = HeldWeaponType.Rifle;
+                    bossAnimator.SetTrigger("ChangeWeapon");
+                    bossAnimator.SetBool("shooting", true);
                     for (int i = 0; i < 4; i++)
                     {
                         huntingRifleFire.Play();
                         yield return new WaitForSeconds(.908f);
+                        transform.position += new Vector3(0, 1.0f, 0);
                         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
                         float distance = Vector3.Distance(gameManager.player.transform.position, transform.position);
                         Vector3 playerVelocity = gameManager.player.GetComponent<Rigidbody>().velocity;
@@ -177,6 +211,7 @@ public class Boss : Enemy
                         GameObject projectile = Instantiate(projectilePrefab, transform.position + direction, bulletRotQ);
                         projectile.GetComponent<Projectile>().parent = gameObject;
                         projectile.GetComponent<Rigidbody>().velocity = (predictedPosition - transform.position).normalized * 40.0f;
+                        transform.position -= new Vector3(0, 1.0f, 0);
                         yield return new WaitForSeconds(.6f);
                     }
                 }
@@ -189,8 +224,10 @@ public class Boss : Enemy
 
         attackingCooldown = true;
         rb.velocity = Vector3.zero;
-        facePlayer = true;
+
         yield return new WaitForSeconds(attackCooldown);
+
+        bossAnimator.SetBool("shooting", false);
         attackingCooldown = false;
         attacking = false;
         facePlayer = false;
