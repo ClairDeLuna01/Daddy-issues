@@ -33,12 +33,13 @@ public class UIDisplay : MonoBehaviour
         energyBar.value = player.energy;
         armorIcon.visible = player.armor;
 
-        bossHealth = root.Q<ProgressBar>("boss-hp");
+        bossHealth = root.Q<ProgressBar>("BossHp");
         // bossHealthElement = root.Q<VisualElement>("boss-hp");
         if (gameManager.bossFight)
         {
             bossHealth.visible = true;
-            bossHealth.value = (gameManager.bossEnemy.hp / gameManager.bossEnemy.maxHp) * bossHealth.highValue;
+            // bossHealth.value = gameManager.bossEnemy.hp / gameManager.bossEnemy.maxHp * bossHealth.highValue;
+            bossHealth.value = gameManager.bossEnemy.hp;
         }
         else
         {

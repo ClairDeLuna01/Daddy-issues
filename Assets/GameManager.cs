@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     public bool bossFight = false;
     public GameObject boss;
     [System.NonSerialized]
-    public Enemy bossEnemy;
+    public Boss bossEnemy;
 
     // Start is called before the first frame update
     void Start()
@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
 
         SaveGame();
 
-        bossEnemy = boss.GetComponent<Enemy>();
+        bossEnemy = boss.GetComponent<Boss>();
     }
 
 
