@@ -317,7 +317,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, 0.5f, groundMask))
         {
             // Debug.Log(hit.distance);
-            if (hit.distance < maxStepHeight)
+            if (hit.distance < maxStepHeight && hit.distance > 0.02f)
             {
                 rb.velocity += new Vector3(0.0f, hit.distance * 10f, 0.0f);
             }

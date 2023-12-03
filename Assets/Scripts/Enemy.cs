@@ -42,6 +42,7 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
         frozen = false;
         gameManager.playerScript.freezing = false;
+        gameManager.playerScript.pauseSound.Stop();
     }
 
     void Aggro()

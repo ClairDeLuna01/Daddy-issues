@@ -66,7 +66,8 @@ public class Ranger : Enemy
             {
                 // rotate on the Y axis only to face the walk direction
                 Vector3 rot = transform.rotation.eulerAngles;
-                rot.y = Quaternion.LookRotation(rb.velocity).eulerAngles.y;
+                if (rb.velocity != Vector3.zero)
+                    rot.y = Quaternion.LookRotation(rb.velocity).eulerAngles.y;
                 transform.rotation = Quaternion.Euler(rot);
             }
             if (facePlayer)
@@ -92,7 +93,7 @@ public class Ranger : Enemy
 
     IEnumerator AttackRoutine()
     {
-		if (rangerAnimatorController != null) rangerAnimatorController.PlayShoot();
+        if (rangerAnimatorController != null) rangerAnimatorController.PlayShoot();
         attacking = true;
         yield return new WaitForSeconds(0.8f);
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
@@ -103,7 +104,7 @@ public class Ranger : Enemy
         projectile.GetComponent<Rigidbody>().velocity = direction * 20.0f;
         attackingCooldown = true;
         // walk in a random direction
-		if (rangerAnimatorController != null) rangerAnimatorController.PlayRun();
+        if (rangerAnimatorController != null) rangerAnimatorController.PlayRun();
         Vector3 randomDirection = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
         rb.velocity = randomDirection * speed;
         yield return new WaitForSeconds(attackCooldown / 2);

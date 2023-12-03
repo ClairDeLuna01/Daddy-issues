@@ -15,7 +15,11 @@ public class Arena : MonoBehaviour
     private GameManager gameManager;
     public bool cleared = false;
 
+    public bool saveOnClear = true;
+
     Vector3[] enemyStartPositions;
+
+    public bool isBossArena = false;
 
     private void Start()
     {
@@ -44,6 +48,11 @@ public class Arena : MonoBehaviour
             }
             active = true;
             gameManager.EnterCombat();
+
+            if (isBossArena)
+            {
+                gameManager.bossFight = true;
+            }
         }
     }
 
@@ -65,6 +74,10 @@ public class Arena : MonoBehaviour
                 door.SetActive(false);
             }
             gameManager.ExitCombat();
+            if (saveOnClear)
+            {
+                gameManager.SaveGame();
+            }
         }
     }
 
@@ -80,6 +93,12 @@ public class Arena : MonoBehaviour
         foreach (GameObject door in doors)
         {
             door.SetActive(false);
+        }
+        if (isBossArena)
+        {
+            doors[0].SetActive(true);
+            enemies[0].SetActive(true);
+            gameManager.bossFight = false;
         }
         active = false;
     }

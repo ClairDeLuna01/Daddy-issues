@@ -9,6 +9,9 @@ TagManager:
   - Projectile
   - KeyCardStairs
   - Arena
+  - KeyCardUpstairs1
+  - KeyCardUpstairs2
+  - KeyCardGarage
   layers:
   - Default
   - TransparentFX
