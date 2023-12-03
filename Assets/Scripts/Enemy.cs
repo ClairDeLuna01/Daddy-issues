@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public enum EnemyType
+    {
+        Runner,
+        Ranger
+    }
+
     public int hp = 100;
     public bool aggro = false;
     protected bool frozen = false;
+
+    public EnemyType enemyType;
 
     protected GameManager gameManager;
     protected Rigidbody rb;

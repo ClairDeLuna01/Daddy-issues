@@ -18,6 +18,7 @@ public class Ranger : Enemy
     new void Start()
     {
         base.Start();
+        enemyType = EnemyType.Ranger;
     }
 
     void Move()

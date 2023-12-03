@@ -17,6 +17,8 @@ public class Gun : MonoBehaviour
 
     private GameManager gameManager;
 
+    public bool waitUntilMouse0ReleasedBeforeFiring = false;
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -25,12 +27,16 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
+        if (!waitUntilMouse0ReleasedBeforeFiring && Input.GetButton("Fire1") && Time.time >= nextTimeToFire)
         {
             nextTimeToFire = Time.time + 1f / firerate;
             Shoot();
         }
 
+        if (waitUntilMouse0ReleasedBeforeFiring && Input.GetButtonUp("Fire1"))
+        {
+            waitUntilMouse0ReleasedBeforeFiring = false;
+        }
     }
 
     void Shoot()

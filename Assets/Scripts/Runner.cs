@@ -17,6 +17,7 @@ public class Runner : Enemy
         // parent start
         base.Start();
         hitBox = GetComponent<BoxCollider>();
+        enemyType = EnemyType.Runner;
     }
 
     // Update is called once per frame
@@ -90,11 +91,11 @@ public class Runner : Enemy
             Debug.Log("Player hit");
         }
 		*/
-		Player player = other.transform.GetComponent<Player>();
+        Player player = other.transform.GetComponent<Player>();
 
-		if(player != null) 
-		{
-			player.Hit();
-		}
+        if (player != null)
+        {
+            player.Hit();
+        }
     }
 }

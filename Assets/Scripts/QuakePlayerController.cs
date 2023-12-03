@@ -43,7 +43,10 @@ public class PlayerController : MonoBehaviour
         {
             footstepSound.volume = 0.3f;
         }
+    }
 
+    private void OnEnable()
+    {
         StartCoroutine(FootStep());
     }
 
@@ -313,7 +316,7 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(origin, Vector3.up, Color.yellow, 0.1f);
         if (Physics.Raycast(ray, out RaycastHit hit, 0.5f, groundMask))
         {
-            Debug.Log(hit.distance);
+            // Debug.Log(hit.distance);
             if (hit.distance < maxStepHeight)
             {
                 rb.velocity += new Vector3(0.0f, hit.distance * 10f, 0.0f);

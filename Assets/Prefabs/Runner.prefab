@@ -252,6 +252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 100
   aggro: 0
+  enemyType: 0
 --- !u!54 &595850330630766484
 Rigidbody:
   m_ObjectHideFlags: 0

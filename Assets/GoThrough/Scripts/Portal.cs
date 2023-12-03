@@ -164,6 +164,8 @@ namespace GoThrough
             return clipPlaneVector;
         }
 
+        public bool keepDefaultThickness = false;
+
         /// <summary>
         /// Setup the screen to avoid nearplane clipping.
         /// </summary>
@@ -175,11 +177,20 @@ namespace GoThrough
             float dstToNearPlaneCorner = new Vector3(halfWidth, halfHeight, camera.nearClipPlane).magnitude;
             float screenThickness = 2.0f * dstToNearPlaneCorner;
 
-            Vector3 offset = -Vector3.forward * screenThickness * 0.5f;
+            if (!keepDefaultThickness)
+            {
+                Vector3 offset = -Vector3.forward * screenThickness * 0.5f;
 
-            Transform screenT = this.screen.transform;
-            screenT.localPosition = this.originalScreenPosition + offset;
-            screenT.localScale = new Vector3(screenT.localScale.x, screenT.localScale.y, screenThickness);
+                Transform screenT = this.screen.transform;
+                screenT.localPosition = this.originalScreenPosition + offset;
+                screenT.localScale = new Vector3(screenT.localScale.x, screenT.localScale.y, screenThickness);
+            }
+            else
+            {
+                Transform screenT = this.screen.transform;
+                screenT.localPosition = this.originalScreenPosition;
+                screenT.localScale = new Vector3(screenT.localScale.x, screenT.localScale.y, screenT.localScale.z);
+            }
         }
 
         /// <summary>
@@ -203,7 +214,7 @@ namespace GoThrough
         #endregion
 
         #region PrivateMethods
-        
+
         private void BeginTracking(Traveller traveller)
         {
             if (traveller && !this.trackedTravellers.ContainsKey(traveller))
@@ -239,12 +250,12 @@ namespace GoThrough
                 this.StopTracking(traveller);
 
                 traveller.Teleport(this, this.Destination);
-                
+
                 this.OnTeleportTraveller.Invoke(this, this.Destination, traveller);
                 traveller.InvokeOnTeleport(this, this.Destination);
-                
+
                 this.Destination.BeginTracking(traveller);
-                
+
                 return;
             }
 

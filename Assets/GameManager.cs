@@ -26,6 +26,14 @@ public class GameManager : MonoBehaviour
 
     private AudioSource[] footstepSounds;
 
+    private GameState save = null;
+
+    private GameObject[] enemies;
+    public GameObject runnerPrefab;
+    public GameObject rangerPrefab;
+
+    public bool enableMusic = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +43,16 @@ public class GameManager : MonoBehaviour
 
         footstepSounds = playerController.footstepSounds;
         playerScript = player.GetComponent<Player>();
+
+        enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        if (!enableMusic)
+        {
+            trackCalm.volume = 0;
+            trackCombat.volume = 0;
+        }
+
+        SaveGame();
     }
 
     public void ActivateSlow()
@@ -53,10 +71,11 @@ public class GameManager : MonoBehaviour
         playerController.jumpSound.pitch = 0.5f;
     }
 
-    public void DeactivateSlow()
+    public void DeactivateSlow(bool playAnim = true)
     {
         playerScript.slowing = false;
-        handAnimationController.PlaySlowmo();
+        if (playAnim)
+            handAnimationController.PlaySlowmo();
         Time.timeScale = 1.0f;
         Time.fixedDeltaTime = 0.02F * Time.timeScale;
         fireAudio.pitch = 1.0f;
@@ -75,11 +94,11 @@ public class GameManager : MonoBehaviour
         {
             ActivateSlow();
         }
-        else if (playerScript.slowing && Input.GetKeyUp(KeyCode.LeftShift))
+        else if (playerScript.slowing && (Input.GetKeyUp(KeyCode.LeftShift) || !playerScript.EnergyCheck(playerScript.slowDrainCost)))
         {
             DeactivateSlow();
         }
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && enableMusic)
         {
             if (!inCombat)
             {
@@ -89,6 +108,18 @@ public class GameManager : MonoBehaviour
             {
                 ExitCombat();
             }
+        }
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            SaveGame();
+        }
+        if (Input.GetKeyDown(KeyCode.F9))
+        {
+            LoadSave();
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            playerScript.Hit();
         }
     }
 
@@ -102,7 +133,7 @@ public class GameManager : MonoBehaviour
 
     public void EnterCombat()
     {
-        if (!inCombat)
+        if (!inCombat && enableMusic)
         {
             inCombat = true;
             if (FadeOutCoroutine != null)
@@ -118,7 +149,7 @@ public class GameManager : MonoBehaviour
 
     public void ExitCombat()
     {
-        if (inCombat)
+        if (inCombat && enableMusic)
         {
             inCombat = false;
             if (FadeInCoroutine != null)
@@ -159,5 +190,56 @@ public class GameManager : MonoBehaviour
         trackCalm.volume = 1;
 
         FadeOutCoroutine = null;
+    }
+
+    public void LoadSave()
+    {
+        player.SetActive(true);
+        Camera.main.transform.parent = player.transform;
+        foreach (Transform child in Camera.main.transform)
+        {
+            child.gameObject.SetActive(true);
+        }
+        player.transform.SetPositionAndRotation(save.playerPosition, save.playerRotation);
+        playerScript.armor = save.armor;
+        playerScript.godMode = save.godMode;
+        playerScript.infiniteEnergy = save.infiniteEnergy;
+        playerScript.energy = save.energy;
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            Destroy(enemies[i]);
+        }
+        enemies = new GameObject[save.AliveEnemies.Length];
+        for (int i = 0; i < save.AliveEnemies.Length; i++)
+        {
+            EnemyState enemyState = save.AliveEnemies[i];
+            GameObject enemy;
+            if (enemyState.enemyType == Enemy.EnemyType.Runner)
+            {
+                enemy = Instantiate(runnerPrefab, enemyState.position, enemyState.rotation);
+            }
+            else
+            {
+                enemy = Instantiate(rangerPrefab, enemyState.position, enemyState.rotation);
+            }
+            enemy.GetComponent<Enemy>().hp = enemyState.health;
+            enemy.GetComponent<Enemy>().aggro = enemyState.aggro;
+            enemies[i] = enemy;
+        }
+
+        ExitCombat();
+        DeactivateSlow(false);
+        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
+    }
+
+    public void SaveGame()
+    {
+        EnemyState[] enemyStates = new EnemyState[enemies.Length];
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            Enemy enemy = enemies[i].GetComponent<Enemy>();
+            enemyStates[i] = new EnemyState(enemy.transform.position, enemy.transform.rotation, enemy.hp, enemy.enemyType, enemy.aggro);
+        }
+        save = new GameState(player.transform.position, player.transform.rotation, playerScript.armor, playerScript.godMode, playerScript.infiniteEnergy, playerScript.energy, enemyStates);
     }
 }

@@ -87,7 +87,7 @@ namespace GoThrough
 
                 if (this.depth > this.renderer.MaxRecursionDepth)
                 {
-                    RenderTexture.active = temporaryPoolItem.renderTexture;
+                    RenderTexture.active = this.renderer.PortalCamera.targetTexture;
                     GL.ClearWithSkybox(true, this.renderer.PortalCamera);
                 }
                 else
