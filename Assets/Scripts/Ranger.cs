@@ -5,7 +5,7 @@ using UnityEngine;
 public class Ranger : Enemy
 {
     public GameObject projectilePrefab;
-    public static float speed = 3.0f;
+    public static float speed = 10.0f;
     public static float range = 15.0f;
     public static float attackCooldown = 1.0f;
 
@@ -13,16 +13,21 @@ public class Ranger : Enemy
     private bool attackingCooldown = false;
     private bool facePlayer = false;
 
+    private RangerAnimatorController rangerAnimatorController;
+
     IEnumerator attackRoutine = null;
 
     new void Start()
     {
         base.Start();
         enemyType = EnemyType.Ranger;
+        rangerAnimatorController = GetComponent<RangerAnimatorController>();
+        if (rangerAnimatorController != null) rangerAnimatorController.PlayIdle();
     }
 
     void Move()
     {
+        rangerAnimatorController.PlayRun();
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
         transform.position += speed * Time.deltaTime * direction;
     }
@@ -71,11 +76,13 @@ public class Ranger : Enemy
 
     void Attack()
     {
+        if (rangerAnimatorController != null) rangerAnimatorController.PlayIdle();
         if (!attacking)
         {
             attackRoutine = AttackRoutine();
             StartCoroutine(attackRoutine);
         }
+        if (rangerAnimatorController != null) rangerAnimatorController.PlayShoot();
     }
 
     IEnumerator AttackRoutine()

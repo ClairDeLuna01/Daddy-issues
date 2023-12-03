@@ -11,6 +11,8 @@ public class Runner : Enemy
     private bool attacking = false;
     private bool attackingCooldown = false;
 
+    private RunnerAnimatorController runnerAnimatorController;
+
 
     protected new void Start()
     {
@@ -18,6 +20,8 @@ public class Runner : Enemy
         base.Start();
         hitBox = GetComponent<BoxCollider>();
         enemyType = EnemyType.Runner;
+        runnerAnimatorController = GetComponent<RunnerAnimatorController>();
+        if (runnerAnimatorController != null) runnerAnimatorController.PlayIdle();
     }
 
     // Update is called once per frame
@@ -49,16 +53,20 @@ public class Runner : Enemy
 
     void Run()
     {
+        runnerAnimatorController.PlayRun();
         Vector3 direction = (gameManager.player.transform.position - transform.position).normalized;
         transform.position += speed * Time.deltaTime * direction;
     }
 
     void Attack()
     {
+        runnerAnimatorController.PlayIdle();
+        runnerAnimatorController.PlayAttack();
         if (!attacking)
         {
             StartCoroutine(AttackRoutine());
         }
+
     }
 
     IEnumerator AttackRoutine()
