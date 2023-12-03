@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,11 +17,11 @@ public class UIDisplay : MonoBehaviour
     {
         player = GameObject.Find("Player").GetComponent<Player>();
         root = GetComponent<UIDocument>().rootVisualElement;
-        string[] classNames = { "unity-progress-bar__progress", "energy" };
-        var actualBar = root.Q(classes: classNames);
+
+        var actualBar = root.Query<ProgressBar>("energy-bar").Children<VisualElement>("unity-progress-bar").First();
         actualBar.style.backgroundColor = Color.cyan;
-        classNames = new string[] { "unity-progress-bar__background", "energy" };
-        var barBackground = root.Q(classes: classNames);
+
+        var barBackground = root.Query<ProgressBar>("energy-bar").Children<Label>().First();
         barBackground.style.backgroundColor = Color.clear;
     }
 
